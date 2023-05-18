@@ -1,9 +1,11 @@
 package edu.goshop_ecommerce.dto;
 
 
-import edu.goshop_ecommerce.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 public class AddressRequest {
 
 		
@@ -14,7 +16,5 @@ public class AddressRequest {
 		private String state;
 		private String country;
 		private int pincode;
-		
-		private User user;
 	
 }

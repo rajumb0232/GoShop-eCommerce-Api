@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import edu.goshop_ecommerce.entity.CustomerOrder;
 
-public interface CustomerOrderRepo extends JpaRepository<CustomerOrder, Integer> {
+public interface CustomerOrderRepo extends JpaRepository<CustomerOrder, Long> {
 
 }
