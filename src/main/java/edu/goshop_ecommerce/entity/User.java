@@ -28,7 +28,7 @@ public class User {
 	private String userPassword;
 	private LocalDateTime userCreatedDateTime;
 	private UserRole userRole;
-	private MerchantStatus merchanStatus;
+	private MerchantStatus merchantStatus;
 	
 	@OneToMany(mappedBy = "user")
 	private List<Address> addresses;
