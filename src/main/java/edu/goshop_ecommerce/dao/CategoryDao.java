@@ -17,4 +17,8 @@ public class CategoryDao {
 		return categoryRepo.findById(id);
 	}
 
+	public void deleteCategoryById(long id) {
+		categoryRepo.deleteById(id);
+	}
+
 }

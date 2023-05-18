@@ -22,4 +22,8 @@ public class BrandDao {
 		return brandRepo.findById(id);
 	}
 
+	public void deleteBrandById(long id) {
+		brandRepo.deleteById(id);
+	}
+
 }
