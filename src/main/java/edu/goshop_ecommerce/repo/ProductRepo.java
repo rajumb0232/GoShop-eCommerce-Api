@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import edu.goshop_ecommerce.entity.Product;
 
-public interface ProductRepo extends JpaRepository<Product, Integer>{
+public interface ProductRepo extends JpaRepository<Product, Long>{
 
 }
