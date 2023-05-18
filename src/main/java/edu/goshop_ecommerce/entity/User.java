@@ -3,6 +3,7 @@ package edu.goshop_ecommerce.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import edu.goshop_ecommerce.enums.MerchantStatus;
 import edu.goshop_ecommerce.enums.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class User {
 	private String userPassword;
 	private LocalDateTime userCreatedDateTime;
 	private UserRole userRole;
+	private MerchantStatus merchanStatus;
 	
 	@OneToMany(mappedBy = "user")
 	private List<Address> addresses;
