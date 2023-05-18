@@ -1,4 +1,4 @@
-package edu.goshop_ecoomerce;
+package edu.goshop_ecommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
