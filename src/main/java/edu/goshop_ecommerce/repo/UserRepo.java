@@ -11,7 +11,7 @@ import edu.goshop_ecommerce.enums.MerchantStatus;
 
 public interface UserRepo extends JpaRepository<User, Long>{
 	
-	@Query(value = "select m from User m where m.merchanStatus=?1")
+	@Query(value = "select m from User m where m.merchantStatus=?1")
 	public Optional<List<User>> getMerchantByStatus(MerchantStatus merchantStatus);
 
 }

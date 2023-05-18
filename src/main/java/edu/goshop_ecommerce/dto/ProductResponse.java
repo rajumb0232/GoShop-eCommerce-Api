@@ -5,7 +5,6 @@ import java.util.List;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.Review;
-import edu.goshop_ecommerce.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
