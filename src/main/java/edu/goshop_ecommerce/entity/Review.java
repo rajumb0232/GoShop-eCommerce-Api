@@ -11,10 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Review {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long reviewId;
+	private long userId;
+	private String userName;
 	private int rating;
 	private String feedback;
 }
