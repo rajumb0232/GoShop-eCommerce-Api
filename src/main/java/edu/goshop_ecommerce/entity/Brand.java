@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import edu.goshop_ecommerce.enums.BrandCategory;
-import edu.goshop_ecommerce.enums.Varification;
+import edu.goshop_ecommerce.enums.Verification;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +25,7 @@ public class Brand {
 	private BrandCategory brandCatergory;
 	private String brandDescription;
 	private LocalDate brandEstablishment;
-	private Varification varification;
+	private Verification varification;
 	
 	@OneToMany(mappedBy = "brand")
 	private List<Product> products;

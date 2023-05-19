@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import edu.goshop_ecommerce.entity.User;
-import edu.goshop_ecommerce.enums.MerchantStatus;
+import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.repo.UserRepo;
 
 @Repository
@@ -20,8 +21,8 @@ public class UserDao {
 		return userRepo.save(user);
 	}
 	
-	public List<User> getMerchantByStatus(MerchantStatus merchantStatus){
-		Optional<List<User>> optional = userRepo.getMerchantByStatus(merchantStatus);
+	public List<User> getMerchantByMerchantStatus(Verification verification, UserRole userRole){
+		Optional<List<User>> optional = userRepo.getMerchantByStatus(verification, userRole);
 		if(optional.isEmpty()) {
 			return null;
 		}else {
@@ -41,5 +42,13 @@ public class UserDao {
 		}
 	}
 	
+	public List<User> getAllUsersByRole(UserRole userRole){
+		Optional<List<User>> optional = userRepo.getAllUsersByRole(userRole);
+		if(optional.isEmpty()) {
+			return null;
+		}else {
+			return optional.get();
+		}
+	}
 	
 }
