@@ -28,4 +28,16 @@ public class ProductDao {
 		}
 	}
 	
+	public Product deleteProduct(long productId) {
+		Optional<Product> product = repo.findById(productId);
+		if(product.isPresent()) {
+			repo.delete(product.get());
+			return product.get();
+		}
+		else {
+			return null;
+		}
+
+	}
+	
 }
