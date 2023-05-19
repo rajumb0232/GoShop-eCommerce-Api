@@ -15,6 +15,8 @@ import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.exception.AdministratorCannotBeAddedException;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -35,7 +37,7 @@ public class UserService {
 			user = userDao.addUser(user);
 			userResponse = this.modelMapper.map(user, UserResponse.class);
 			
-			message = "Administrator added successfully!!";
+			message = "Merchant added successfully!!";
 			
 		}else if(userRole.equals(UserRole.CUSTOMER)) {
 			User user = this.modelMapper.map(userRequest, User.class);
@@ -44,11 +46,11 @@ public class UserService {
 			user = userDao.addUser(user);
 			userResponse = this.modelMapper.map(user, UserResponse.class);
 			
-			message = "Administrator added successfully!!";
+			message = "Customer added successfully!!";
 
 		}else if(userRole.equals(UserRole.ADMINISTRATOR)) {
 			List<User> users = userDao.getAllUsersByRole(userRole);
-			if(users.size()>0) {
+			if(users.size()==0) {
 				User user = this.modelMapper.map(userRequest, User.class);
 				user.setUserRole(UserRole.ADMINISTRATOR);
 				user.setVerification(Verification.VERIFIED);
@@ -58,7 +60,7 @@ public class UserService {
 				message = "Administrator added successfully!!";
 
 			}else
-				throw new AdministratorCannotBeAddedException("Failed to add Administrator!!");
+				throw new AdministratorCannotBeAddedException("Failed to add administrator!!");
 		}
 		ResponseStructure<UserResponse> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatus(HttpStatus.CREATED.value());
@@ -66,5 +68,25 @@ public class UserService {
 		responseStructure.setData(userResponse);
 		return new ResponseEntity<ResponseStructure<UserResponse>> (responseStructure, HttpStatus.CREATED);
 	}
+
+	public ResponseEntity<ResponseStructure<UserResponse>> getUserByIdByRole(long userId, UserRole userRole) {
+		User user = userDao.findUserById(userId);
+		if(user!=null) {
+			if(user.getUserRole().equals(userRole)) {
+				UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+				ResponseStructure<UserResponse> responseStructure = new ResponseStructure<>();
+				responseStructure.setStatus(HttpStatus.FOUND.value());
+				responseStructure.setMessage("User found with role: "+userRole+".");
+				responseStructure.setData(userResponse);
+				return new ResponseEntity<ResponseStructure<UserResponse>> (responseStructure, HttpStatus.FOUND);
+			}else 
+				throw new UserNotPresentWithRoleException("Failed to find User!!");
+			
+		}else
+			throw new UserNotFoundByIdException("Failed to find User!!");
+	}
+	
+	
+	
 
 }
