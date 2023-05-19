@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dao.CategoryDao;
 import edu.goshop_ecommerce.dao.ProductDao;
+import edu.goshop_ecommerce.dao.ReviewDao;
 import edu.goshop_ecommerce.dao.UserDao;
 import edu.goshop_ecommerce.dto.ProductRequest;
 import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.Product;
+import edu.goshop_ecommerce.entity.Review;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
@@ -34,6 +36,8 @@ public class ProductService {
 	private BrandDao brandDao;
 	@Autowired
 	private ModelMapper modelMapper;
+	@Autowired
+	private ReviewDao reviewDao;
 	
 	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(ProductRequest productRequest,long userId,long categoryId,long brandId){
 		Product product = this.modelMapper.map(productRequest, Product.class);
@@ -124,6 +128,40 @@ public class ProductService {
 		else {
 			return null;  // throw category not found for given category id
 		}
+	}
+	
+	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(long productId){
+		Product product = productDao.findProduct(productId);
+		if(product!=null) {
+			Brand productBrand = product.getBrand();
+			List<Product> products = productBrand.getProducts();
+			products.remove(product);
+			productBrand.setProducts(products);
+			brandDao.addBrand(productBrand);
+			
+			Category productCategory = product.getCategory();
+			 products = productCategory.getProducts();
+			products.remove(product);
+			productCategory.setProducts(products);
+			categoryDao.addCategory(productCategory);
+			
+			// should call delete customer product method from customer product service
+			
+			productDao.deleteProduct(productId);
+			
+			ResponseStructure<ProductResponse> structure = new ResponseStructure<>();
+			structure.setData(this.modelMapper.map(product,ProductResponse.class));
+			structure.setMessage("product deleted success");
+			structure.setStatus(HttpStatus.OK.value());
+			
+			return new ResponseEntity<ResponseStructure<ProductResponse>>(structure,HttpStatus.OK);
+	
+			
+		}
+		else {
+			return null;  //throw product not found for given product id
+		}
+		
 	}
 	
 	
