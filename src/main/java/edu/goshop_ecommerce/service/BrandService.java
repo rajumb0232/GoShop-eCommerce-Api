@@ -80,20 +80,4 @@ public class BrandService {
 			throw new BrandNotFoundByIdException("brand with given id not found");
 		}
 	}
-
-	public ResponseEntity<ResponseStructure<BrandResponse>> getBrandById(long brandId) {
-		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
-		if (optionalBrand.isPresent()) {
-			Brand brand = optionalBrand.get();
-			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-			ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
-			responseStructure.setStatus(HttpStatus.FOUND.value());
-			responseStructure.setMessage("brand found");
-			responseStructure.setData(brandResponse);
-			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.FOUND);
-		} else {
-			throw new BrandNotFoundByIdException("brand with given id not found");
-		}
-	}
-
 }
