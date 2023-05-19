@@ -2,8 +2,8 @@ package edu.goshop_ecommerce.dto;
 
 import java.time.LocalDateTime;
 
-import edu.goshop_ecommerce.enums.MerchantStatus;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.enums.Verification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +18,5 @@ public class MerchantResponse {
 	private String userPassword;
 	private LocalDateTime userCreatedDateTime;
 	private UserRole userRole;
-	private MerchantStatus merchantStatus;
+	private Verification verification;
 }

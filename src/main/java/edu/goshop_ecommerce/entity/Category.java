@@ -2,7 +2,7 @@ package edu.goshop_ecommerce.entity;
 
 import java.util.List;
 
-import edu.goshop_ecommerce.enums.Varification;
+import edu.goshop_ecommerce.enums.Verification;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +20,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long categoryId;
 	private String categoryName;
-	private Varification varification;
+	private Verification varification;
 	
 	@OneToMany(mappedBy = "category")
 	private List<Product> products;
