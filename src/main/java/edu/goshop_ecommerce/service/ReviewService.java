@@ -61,7 +61,7 @@ public class ReviewService {
 		}
 		ResponseStructure<Review> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessage("Review added");
+		responseStructure.setMessage("Review updated");
 		responseStructure.setData(review);
 		return new ResponseEntity<ResponseStructure<Review>>(responseStructure, HttpStatus.CREATED);
 
