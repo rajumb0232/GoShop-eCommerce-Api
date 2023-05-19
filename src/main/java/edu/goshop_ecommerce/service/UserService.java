@@ -143,6 +143,10 @@ public class UserService {
 						customerProductDao.deleteCustomerProduct(customerProduct);
 					}
 				}
+				
+				if(exUser.getUserRole().equals(UserRole.MERCHANT)) {
+					// call delete products method from product service.
+				}
 			}else 
 				throw new AdministratorCannotBeDeletedException("Failed to delete User with role "+exUser.getUserRole()+" !!");
 			
