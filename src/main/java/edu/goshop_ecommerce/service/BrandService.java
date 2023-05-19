@@ -1,5 +1,6 @@
 package edu.goshop_ecommerce.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -12,7 +13,10 @@ import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dto.BrandRequest;
 import edu.goshop_ecommerce.dto.BrandResponse;
 import edu.goshop_ecommerce.entity.Brand;
+import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.enums.Verification;
+import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
+import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -39,21 +43,57 @@ public class BrandService {
 		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
 		Brand brand = this.modelMapper.map(brandRequest, Brand.class);
 		if (optionalBrand.isPresent()) {
-			Brand tempBrand = optionalBrand.get();
-			tempBrand.setBrandName(brand.getBrandName());
-			tempBrand.setBrandCatergory(brand.getBrandCatergory());
-			tempBrand.setBrandDescription(brand.getBrandDescription());
-			tempBrand.setBrandEstablishment(brand.getBrandEstablishment());
-			brandDao.addBrand(tempBrand);
+			Brand exBrand = optionalBrand.get();
+			brand.setBrandId(exBrand.getBrandId());
+			brand.setVarification(exBrand.getVarification());
+			brand.setProducts(exBrand.getProducts());
+			brandDao.addBrand(brand);
+			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+			ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatus(HttpStatus.CREATED.value());
+			responseStructure.setMessage("Brand updated");
+			responseStructure.setData(brandResponse);
+			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.CREATED);
+		} else {
+			throw new BrandNotFoundByIdException("brand with given id not found");
 		}
-		optionalBrand = brandDao.getBrandById(brandId);
-		brand = optionalBrand.get();
-		BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-		ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
-		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessage("Brand updated");
-		responseStructure.setData(brandResponse);
-		return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.CREATED);
+
+	}
+
+	public ResponseEntity<ResponseStructure<BrandResponse>> deleteBrandById(long brandId) {
+		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
+		if (optionalBrand.isPresent()) {
+			Brand brand = optionalBrand.get();
+			List<Product> products = brand.getProducts();
+			if (products != null && products.size() > 0) {
+				throw new BrandCanNotBeDeletedException("brand cannot be deleted since it has products");
+			} else {
+				brandDao.deleteBrandById(brandId);
+				ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
+				responseStructure.setStatus(HttpStatus.OK.value());
+				responseStructure.setMessage("Brand with given id deleted");
+				BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+				responseStructure.setData(brandResponse);
+				return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.NOT_FOUND);
+			}
+		} else {
+			throw new BrandNotFoundByIdException("brand with given id not found");
+		}
+	}
+
+	public ResponseEntity<ResponseStructure<BrandResponse>> getBrandById(long brandId) {
+		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
+		if (optionalBrand.isPresent()) {
+			Brand brand = optionalBrand.get();
+			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+			ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatus(HttpStatus.FOUND.value());
+			responseStructure.setMessage("brand found");
+			responseStructure.setData(brandResponse);
+			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.FOUND);
+		} else {
+			throw new BrandNotFoundByIdException("brand with given id not found");
+		}
 	}
 
 }
