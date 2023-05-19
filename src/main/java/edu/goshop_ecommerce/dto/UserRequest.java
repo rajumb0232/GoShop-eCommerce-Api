@@ -1,7 +1,5 @@
 package edu.goshop_ecommerce.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +12,4 @@ public class UserRequest {
 	private long userPhoneNumber;
 	private String UserEmail;
 	private String userPassword;
-	private LocalDateTime userCreatedDateTime;
 }
