@@ -3,7 +3,7 @@ package edu.goshop_ecommerce.dto;
 import java.time.LocalDate;
 
 import edu.goshop_ecommerce.enums.BrandCategory;
-import edu.goshop_ecommerce.enums.Varification;
+import edu.goshop_ecommerce.enums.Verification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +16,6 @@ public class BrandResponse {
 	private BrandCategory brandCatergory;
 	private String brandDescription;
 	private LocalDate brandEstablishment;
-	private Varification varification;
+	private Verification varification;
 
 }
