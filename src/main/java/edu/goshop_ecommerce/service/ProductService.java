@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dao.CategoryDao;
 import edu.goshop_ecommerce.dao.ProductDao;
-import edu.goshop_ecommerce.dao.ReviewDao;
 import edu.goshop_ecommerce.dao.UserDao;
 import edu.goshop_ecommerce.dto.ProductRequest;
 import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Category;
+import edu.goshop_ecommerce.entity.CustomerProduct;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.util.ResponseStructure;
@@ -36,7 +36,7 @@ public class ProductService {
 	@Autowired
 	private ModelMapper modelMapper;
 	@Autowired
-	private ReviewDao reviewDao;
+	private CustomerProductService customerProductService;
 	
 	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(ProductRequest productRequest,long userId,long categoryId,long brandId){
 		Product product = this.modelMapper.map(productRequest, Product.class);
@@ -147,7 +147,9 @@ public class ProductService {
 			categoryDao.addCategory(productCategory);
 			
 			// should call delete customer product method from customer product service
-			
+			for(CustomerProduct customerProduct : product.getCustomerProducts()) {
+				customerProductService.deleteCustomerProduct(customerProduct.getCustomerProductId());
+			}
 			productDao.deleteProduct(productId);
 			
 			ResponseStructure<ProductResponse> structure = new ResponseStructure<>();

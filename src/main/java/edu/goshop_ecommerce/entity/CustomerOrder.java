@@ -22,9 +22,6 @@ public class CustomerOrder {
 	private long customerOrderId;
 	private LocalDateTime orderedDateTime;
 	private OrderStatus orderStatus;
-	private double totalMRP;
-	private double totalSaved;
-	private double finalPrice;
 	
 	private long productId;
 	private String productName;

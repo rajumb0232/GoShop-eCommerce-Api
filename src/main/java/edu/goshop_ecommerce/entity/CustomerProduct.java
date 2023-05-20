@@ -21,6 +21,7 @@ public class CustomerProduct {
 	private long customerProductId;
 	private Priority priority;
 	private BuyStatus buyStatus;
+	private int productQuantity;
 	
 	@ManyToOne
 	@JoinColumn
