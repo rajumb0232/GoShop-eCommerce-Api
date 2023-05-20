@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import edu.goshop_ecommerce.entity.CustomerProduct;
+import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.Priority;
 import edu.goshop_ecommerce.repo.CustomerProductRepo;
@@ -22,7 +23,7 @@ public class CustomerProductDao {
 	}
 	
 	public List<CustomerProduct> getCustomerProductsByUserByPriority(User user, Priority priority){
-		Optional<List<CustomerProduct>> optional = customerProductRepo.getAllCustomerByUserByPriority(user, priority);
+		Optional<List<CustomerProduct>> optional = customerProductRepo.getAllCustomerProductsByUserByPriority(user, priority);
 		if(optional.isEmpty()) {
 			return null;
 		}else {
@@ -30,8 +31,16 @@ public class CustomerProductDao {
 		}
 	}
 	
+	public Optional<CustomerProduct> getCustomerProductByProduct(Product product) {
+		return customerProductRepo.getCustomerProductByProduct(product);
+	}
+	
 	public void deleteCustomerProduct(CustomerProduct customerProduct) {
 		customerProductRepo.delete(customerProduct);
+	}
+
+	public Optional<CustomerProduct> getCustomerProductById(long customerProductId) {
+		return customerProductRepo.findById(customerProductId);
 	}
 	
 }
