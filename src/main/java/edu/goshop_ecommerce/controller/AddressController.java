@@ -15,7 +15,7 @@ import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("address")
+@RequestMapping("/address")
 public class AddressController {
 	@Autowired
 	private AddressService addressService;
