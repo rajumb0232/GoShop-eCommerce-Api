@@ -2,6 +2,7 @@ package edu.goshop_ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ public class ProductController {
 	@Autowired
 	private ProductService service;
 	
+	@PostMapping
 	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@RequestBody ProductRequest productRequest,@RequestParam long userId,@RequestParam long categoryId,@RequestParam long brandId){
 		return service.addProduct(productRequest, userId, categoryId, brandId);
 	}
