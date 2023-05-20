@@ -50,6 +50,8 @@ public class CustomerProductService {
 						customerProduct.setBuyStatus(BuyStatus.WISHLISTED);
 					}
 					customerProduct = customerProductDao.addCustomerProduct(customerProduct);
+					product.getCustomerProducts().add(customerProduct);
+					productDao.addProduct(product);
 					CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct, CustomerProductResponse.class);
 					ResponseStructure<CustomerProductResponse> responseStructure = new ResponseStructure<>();
 					responseStructure.setStatus(HttpStatus.CREATED.value());
