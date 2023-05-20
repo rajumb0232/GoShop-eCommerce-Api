@@ -11,15 +11,15 @@ import edu.goshop_ecommerce.repo.AddressRepo;
 @Repository
 public class AddressDao {
 	@Autowired
-	private AddressRepo repo;
+	private AddressRepo addressRepo;
 	
 	public Address saveAddress(Address address) {
-		return repo.save(address);
+		return addressRepo.save(address);
 		
 	}
 	
 	public Address findAddress(long addressId) {
-		Optional<Address> address = repo.findById(addressId);
+		Optional<Address> address = addressRepo.findById(addressId);
 		if(address.isPresent()) {
 			return address.get();
 		}
@@ -27,5 +27,9 @@ public class AddressDao {
 			return null;
 		}
 		
+	}
+
+	public void deleteAddress(Address address) {
+		addressRepo.delete(address);
 	}
 }
