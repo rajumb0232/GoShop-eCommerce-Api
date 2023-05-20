@@ -18,7 +18,6 @@ import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Service
 public class BrandService {

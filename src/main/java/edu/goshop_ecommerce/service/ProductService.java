@@ -14,6 +14,8 @@ import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dao.CategoryDao;
 import edu.goshop_ecommerce.dao.ProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
+import edu.goshop_ecommerce.dto.BrandResponse;
+import edu.goshop_ecommerce.dto.CategoryResponse;
 import edu.goshop_ecommerce.dto.ProductRequest;
 import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.entity.Brand;
@@ -53,6 +55,12 @@ public class ProductService {
 					product.setProductFinalePrice(product.getProductMRP()*(100-product.getProductdiscountInPercentage())/ 100);
 					
 					ProductResponse productResponse = this.modelMapper.map(productDao.addProduct(product), ProductResponse.class);
+					
+					BrandResponse brandResponse = this.modelMapper.map(product.getBrand(), BrandResponse.class );
+					CategoryResponse categoryResponse = this.modelMapper.map(product.getCategory(), CategoryResponse.class);
+					
+					productResponse.setBrandResponse(brandResponse);
+					productResponse.setCategoryResponse(categoryResponse);
 					
 					ResponseStructure<ProductResponse> structure = new ResponseStructure<>();
 					structure.setData(productResponse);

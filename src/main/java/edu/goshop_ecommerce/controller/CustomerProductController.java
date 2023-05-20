@@ -1,7 +1,11 @@
 package edu.goshop_ecommerce.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,5 +29,15 @@ public class CustomerProductController {
 		return customerproductService.addCustomerProduct(priority, productId, userId);
 	}
 	
+	@DeleteMapping
+	public ResponseEntity<ResponseStructure<CustomerProductResponse>> deleteCustomerProduct(
+			@RequestParam long CustomerProductId){
+		return customerproductService.deleteCustomerProduct(CustomerProductId);
+	}
 	
+	@GetMapping
+	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(
+			@RequestParam long userId, @RequestParam Priority priority){
+		return customerproductService.getCustomerProductsByUserByPriority(userId, priority);
+	}
 }
