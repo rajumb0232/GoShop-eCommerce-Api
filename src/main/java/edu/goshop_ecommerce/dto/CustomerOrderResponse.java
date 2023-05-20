@@ -2,8 +2,6 @@ package edu.goshop_ecommerce.dto;
 
 import java.time.LocalDateTime;
 
-import edu.goshop_ecommerce.entity.Address;
-import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
