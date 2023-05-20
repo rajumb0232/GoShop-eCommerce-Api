@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -45,6 +44,6 @@ public class Product {
 	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Review> reviews;
 	
-	@ManyToMany(mappedBy = "products")
+	@OneToMany(mappedBy = "products")
 	private List<CustomerProduct> customerProducts;
 }

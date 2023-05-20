@@ -12,7 +12,6 @@ public class ProductRequest {
 	private String productDescription;
 	private double productMRP;
 	private double productdiscountInPercentage;
-	private double productFinalePrice;
 	private int productQuantity;
 	private float rating;
 	

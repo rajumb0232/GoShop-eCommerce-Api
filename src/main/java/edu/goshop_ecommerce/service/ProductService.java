@@ -20,7 +20,6 @@ import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.Product;
-import edu.goshop_ecommerce.entity.Review;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
@@ -50,6 +49,8 @@ public class ProductService {
 					product.setBrand(optionalBrand.get());
 					product.setCategory(optionalCategory.get());
 					product.setUser(user);
+					
+					product.setProductFinalePrice(product.getProductMRP()*(100-product.getProductdiscountInPercentage())/ 100);
 					
 					ProductResponse productResponse = this.modelMapper.map(productDao.addProduct(product), ProductResponse.class);
 					

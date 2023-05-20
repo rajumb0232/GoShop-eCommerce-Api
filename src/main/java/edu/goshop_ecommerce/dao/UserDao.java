@@ -21,11 +21,11 @@ public class UserDao {
 		return userRepo.save(user);
 	}
 	
-	public List<User> getMerchantByMerchantStatus(Verification verification, UserRole userRole){
+	public List<User> getMerchantByMerchantStatus(Verification verification, UserRole userRole) {
 		Optional<List<User>> optional = userRepo.getMerchantByStatus(verification, userRole);
-		if(optional.isEmpty()) {
+		if (optional.isEmpty()) {
 			return null;
-		}else {
+		} else {
 			return optional.get();
 		}
 	}

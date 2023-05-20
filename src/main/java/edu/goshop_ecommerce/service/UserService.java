@@ -18,6 +18,7 @@ import edu.goshop_ecommerce.dto.UserResponse;
 import edu.goshop_ecommerce.entity.Address;
 import edu.goshop_ecommerce.entity.CustomerOrder;
 import edu.goshop_ecommerce.entity.CustomerProduct;
+import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
@@ -40,6 +41,8 @@ public class UserService {
 	private CustomerProductDao customerProductDao;
 	@Autowired
 	private AddressDao addressDao;
+	@Autowired
+	private ProductService productService;
 
 	public ResponseEntity<ResponseStructure<UserResponse>> addUser(UserRequest userRequest, UserRole userRole) {
 		String message = null;
@@ -146,6 +149,12 @@ public class UserService {
 				
 				if(exUser.getUserRole().equals(UserRole.MERCHANT)) {
 					// call delete products method from product service.
+					for(Product product : exUser.getProducts()) {
+						for(CustomerProduct customerProduct : product.getCustomerProducts()) {
+							customerProductDao.deleteCustomerProduct(customerProduct);
+						}
+						productService.deleteProduct(product.getProductId());
+					}
 				}
 			}else 
 				throw new AdministratorCannotBeDeletedException("Failed to delete User with role "+exUser.getUserRole()+" !!");
