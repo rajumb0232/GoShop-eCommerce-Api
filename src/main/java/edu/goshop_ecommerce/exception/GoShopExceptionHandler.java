@@ -46,6 +46,16 @@ public class GoShopExceptionHandler {
 		responseStructure.setData("Only customers can add review!!");
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> AdministratorCannotBeDeleted(AdministratorCannotBeDeletedException ex){
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("Admin Connot be delted, can only be updated!!");
+		return new ResponseEntity<ResponseStructure<String>> (responseStructure, HttpStatus.NOT_FOUND);
+	}
+	
 
 	@ExceptionHandler
 	public ResponseEntity<ResponseStructure<String>> handleBrandCanNotBeDeletedException(

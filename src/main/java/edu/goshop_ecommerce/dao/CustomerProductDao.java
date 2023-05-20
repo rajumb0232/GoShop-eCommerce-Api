@@ -30,5 +30,8 @@ public class CustomerProductDao {
 		}
 	}
 	
+	public void deleteCustomerProduct(CustomerProduct customerProduct) {
+		customerProductRepo.delete(customerProduct);
+	}
 	
 }
