@@ -22,4 +22,8 @@ public class ReviewDao {
 		return reviewRepo.findById(id);
 	}
 
+	public void deleteReviewById(long id) {
+		reviewRepo.deleteById(id);
+	}
+
 }
