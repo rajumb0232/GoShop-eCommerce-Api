@@ -25,6 +25,8 @@ import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.OrderStatus;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -97,7 +99,7 @@ public class CustomerOrderService {
 				
 			}
 		}
-		return null;   // throw user not found exception 	
+		throw new UserNotFoundByIdException("user not found by given id"); 	
 	}
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> findCustomerOrder(long customerOrderId){
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
@@ -112,6 +114,8 @@ public class CustomerOrderService {
 			return new ResponseEntity<ResponseStructure<CustomerOrderResponse>>(structure, HttpStatus.FOUND);
 			
 		}
-		return null;    // throw customer order not found 
+		throw new CustomerProductNotFoundByIdException("customer order not found by given id");
 	}
+	
+	
 }

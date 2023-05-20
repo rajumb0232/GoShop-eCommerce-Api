@@ -15,6 +15,8 @@ import edu.goshop_ecommerce.dto.AddressResponse;
 import edu.goshop_ecommerce.entity.Address;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.exception.AddressNotFoundById;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -61,7 +63,7 @@ public class AddressService {
 			}
 			
 		}
-		return null;     // create exception for user not found for given id	
+		throw new UserNotFoundByIdException("user not found by given user id");
 	}
 	
 	public ResponseEntity<ResponseStructure<AddressResponse>> getAddress(long addressId){
@@ -74,7 +76,7 @@ public class AddressService {
 			structure.setStatus(HttpStatus.FOUND.value());
 			return new ResponseEntity<ResponseStructure<AddressResponse>>(structure,HttpStatus.FOUND);
 		}
-		 return null;     // create exception for address not found for given address id
+		 throw new AddressNotFoundById("address not found for given id");
 	}
 	
 	

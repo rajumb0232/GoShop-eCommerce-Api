@@ -23,6 +23,10 @@ import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.CustomerProduct;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
+import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
+import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
+import edu.goshop_ecommerce.exception.ProductNotFoundById;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -72,15 +76,15 @@ public class ProductService {
 					
 				}
 				else {
-					return null; // throw brand not found given id
+					throw new BrandNotFoundByIdException("brand not found for given brand id");
 				}
 			}
 			else {
-				return null;  // throw category not found
+				throw new CategoryNotFoundByIdException("category not found for given category id");
 			}	
 		}
 		else {
-			return null;  // throw user not found for given user id
+			throw new UserNotFoundByIdException("user not found for given user id");
 		}
 		
 	}
@@ -96,7 +100,7 @@ public class ProductService {
 			return new ResponseEntity<ResponseStructure<ProductResponse>>(structure,HttpStatus.FOUND);
 			
 		}else {
-			return null; // throw product not found for given product id
+			throw new ProductNotFoundById("product not found");
 		}
 			
 	}
@@ -116,7 +120,7 @@ public class ProductService {
 			return new ResponseEntity<ResponseStructure<List<ProductResponse>>>(structure,HttpStatus.FOUND);
 		}
 		else {
-			return null; // throw brand id not found
+			throw new BrandNotFoundByIdException("brand not found for given brand id");
 		}
 	}
 	
@@ -135,7 +139,7 @@ public class ProductService {
 			return new ResponseEntity<ResponseStructure<List<ProductResponse>>>(structure,HttpStatus.FOUND);
 		}
 		else {
-			return null;  // throw category not found for given category id
+			throw new CategoryNotFoundByIdException("category not found for the given category id");
 		}
 	}
 	
@@ -170,7 +174,7 @@ public class ProductService {
 			
 		}
 		else {
-			return null;  //throw product not found for given product id
+			throw new ProductNotFoundById("product not found");
 		}
 		
 	}
