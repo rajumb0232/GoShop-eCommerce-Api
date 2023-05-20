@@ -41,7 +41,7 @@ public class CustomerProductService {
 				if(product!=null) {
 					CustomerProduct customerProduct = new CustomerProduct();
 					customerProduct.setUser(user);
-					customerProduct.getProducts().add(product);
+					//customerProduct.getProducts().add(product);
 					customerProduct.setPriority(priority);
 					if(priority.equals(Priority.CART)) {
 						customerProduct.setBuyStatus(BuyStatus.BUY_NOW);

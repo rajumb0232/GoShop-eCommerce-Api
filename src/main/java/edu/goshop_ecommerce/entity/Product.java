@@ -44,6 +44,6 @@ public class Product {
 	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Review> reviews;
 	
-	@OneToMany(mappedBy = "products")
+	@OneToMany(mappedBy = "product")
 	private List<CustomerProduct> customerProducts;
 }
