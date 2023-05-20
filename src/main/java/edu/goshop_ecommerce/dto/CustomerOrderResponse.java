@@ -30,8 +30,8 @@ public class CustomerOrderResponse {
 	private String userSecondName;
 	private String UserEmail;
 
-	private Address address;
+	private AddressResponse addressResponse;
 	
 	// user entity with role customer
-	private User user;
+	private UserResponse userResponse;
 }
