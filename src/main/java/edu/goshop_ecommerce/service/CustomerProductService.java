@@ -1,5 +1,7 @@
 package edu.goshop_ecommerce.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -41,12 +43,15 @@ public class CustomerProductService {
 		if (user != null) {
 			if (user.getUserRole().equals(UserRole.CUSTOMER)) {
 				Product product = productDao.findProduct(productId);
-				if (product != null) {
-					Optional<CustomerProduct> exCustomerProduct = customerProductDao
-							.getCustomerProductByProduct(product);
-					CustomerProduct customerProduct = new CustomerProduct();
 
-					if (exCustomerProduct.isEmpty()) {
+				if(product!=null) {
+					Optional<CustomerProduct> exCustomerProduct = customerProductDao.getCustomerProductByProduct(product);
+		/*
+		 * check if the product present as CustomerProduct*/
+					CustomerProduct customerProduct = new CustomerProduct();
+					if(exCustomerProduct.isEmpty()) {
+						/*
+						 * if not present create CustoemrProduct*/
 						customerProduct.setUser(user);
 						customerProduct.setProduct(product);
 						customerProduct.setPriority(priority);
@@ -64,6 +69,11 @@ public class CustomerProductService {
 						customerProduct = exCustomerProduct.get();
 						if (customerProduct.getBuyStatus().equals(BuyStatus.BUY_NOW)) {
 							customerProduct.setProductQuantity(customerProduct.getProductQuantity() + 1);
+							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
+						}
+						if(customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER) || 
+								customerProduct.getBuyStatus().equals(BuyStatus.WISHLISTED)) {
+							customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
 							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 						}
 					}
@@ -109,4 +119,30 @@ public class CustomerProductService {
 		}
 	}
 
+
+
+
+	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(long userId, Priority priority) {
+		User user = userDao.findUserById(userId);
+		if(user!=null) {
+			if(user.getUserRole().equals(UserRole.CUSTOMER)) {
+			 List<CustomerProduct> customerProducts = customerProductDao.getCustomerProductsByUserByPriority(user, priority);
+			 List<CustomerProductResponse> customerProductResponses = new ArrayList<>();
+			 for(CustomerProduct customerProduct : customerProducts) {
+				CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct, CustomerProductResponse.class);
+				customerProductResponses.add(customerProductResponse);
+			 }
+				ResponseStructure<List<CustomerProductResponse>> responseStructure = new ResponseStructure<>();
+				responseStructure.setStatus(HttpStatus.OK.value());
+				responseStructure.setMessage("CustomerProducts found.");
+				responseStructure.setData(customerProductResponses);
+				return new ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> (responseStructure, HttpStatus.OK);
+			}else {
+				throw new UserIsNotACustomerException("Failed to find CustomerProduct !!");
+			}
+		}else 
+			throw new CustomerProductNotFoundByIdException("Failed to find CustomerProduct !!");
+	}
+	
+	
 }
