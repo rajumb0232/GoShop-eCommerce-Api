@@ -32,6 +32,6 @@ public class CustomerProduct {
 	@ManyToOne
 	@JoinColumn
 	private User user;
-	
+
 	
 }

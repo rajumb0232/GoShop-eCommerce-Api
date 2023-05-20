@@ -51,4 +51,8 @@ public class UserDao {
 		}
 	}
 
+	public void deleteUser(User exUser) {
+		userRepo.delete(exUser);
+	}
+
 }

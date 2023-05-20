@@ -40,12 +40,12 @@ public class UserController {
 	@PutMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(
 			@RequestParam long userId, @RequestBody UserRequest userRequest){
-		return null;
+		return userService.updateUser(userId, userRequest);
 	}
 	
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser(
 			@RequestParam long userId){
-		return null;
+		return userService.deleteUser(userId);
 	}
 }
