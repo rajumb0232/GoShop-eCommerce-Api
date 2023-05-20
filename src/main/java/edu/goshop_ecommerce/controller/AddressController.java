@@ -15,7 +15,7 @@ import edu.goshop_ecommerce.service.AddressService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @RestController
-@RequestMapping("address")
+@RequestMapping("/address")
 public class AddressController {
 	@Autowired
 	private AddressService addressService;
