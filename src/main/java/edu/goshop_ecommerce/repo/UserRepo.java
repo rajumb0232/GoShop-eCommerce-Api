@@ -12,7 +12,7 @@ import edu.goshop_ecommerce.enums.Verification;
 
 public interface UserRepo extends JpaRepository<User, Long>{
 	
-	@Query(value = "select m from User m where m.verification=?1 m.userRole=?2")
+	@Query(value = "select m from User m where m.verification=?1 and m.userRole=?2")
 	public Optional<List<User>> getMerchantByStatus(Verification verification, UserRole userRole);
 
 	@Query(value = "select m from User m where m.userRole=?1")
