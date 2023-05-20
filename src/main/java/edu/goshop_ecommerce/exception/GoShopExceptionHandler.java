@@ -104,5 +104,31 @@ public class GoShopExceptionHandler {
 		responseStructure.setData("Review not found");
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> AddressNotFoundByIdException(AddressNotFoundById ex) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("address not found");
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> CustomerOrderNotFoundById(CustomerOrderNotFoundById ex) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("customer order not found for given id");
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> ProductNotFoundById(ProductNotFoundById ex) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("product not found");
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
 
 }
