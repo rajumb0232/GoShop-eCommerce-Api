@@ -1,7 +1,5 @@
 package edu.goshop_ecommerce.entity;
 
-import java.util.List;
-
 import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
 import jakarta.persistence.Entity;
@@ -26,7 +24,7 @@ public class CustomerProduct {
 	
 	@ManyToOne
 	@JoinColumn
-	private List<Product> products;
+	private Product product;
 	
 	@ManyToOne
 	@JoinColumn
