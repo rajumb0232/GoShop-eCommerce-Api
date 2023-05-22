@@ -1,6 +1,6 @@
 package edu.goshop_ecommerce.dto;
 
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,13 +8,19 @@ import lombok.Setter;
 @Setter
 public class AddressRequest {
 
-		
-		private int flatNo;
-		private String area;
-		private String city;
-		private String landmark;
-		private String state;
-		private String country;
-		private int pincode;
-	
+	@Schema(required = true)
+	private int flatNo;
+	@Schema(required = true)
+	private String area;
+	@Schema(required = true)
+	private String city;
+	@Schema(required = true)
+	private String landmark;
+	@Schema(required = true)
+	private String state;
+	@Schema(required = true)
+	private String country;
+	@Schema(required = true)
+	private int pincode;
+
 }
