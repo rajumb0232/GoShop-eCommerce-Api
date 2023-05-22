@@ -17,7 +17,10 @@ import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.Review;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.ReviewNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -57,14 +60,14 @@ public class ReviewService {
 					responseStructure.setData(review);
 					return new ResponseEntity<ResponseStructure<Review>>(responseStructure, HttpStatus.CREATED);
 				} else {
-					return null;
+					throw new ProductNotFoundById("Product not found");
 				}
 			} else {
 
-				return null;
+				throw new UserIsNotACustomerException("User is not customer");
 			}
 		} else {
-			return null;
+			throw new UserNotFoundByIdException("User not found");
 		}
 
 	}
