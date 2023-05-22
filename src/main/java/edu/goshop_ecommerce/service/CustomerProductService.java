@@ -54,7 +54,6 @@ public class CustomerProductService {
 						/*
 						 * if not present create CustoemrProduct
 						 */
-
 						customerProduct.setUser(user);
 						customerProduct.setProduct(product);
 						customerProduct.setPriority(priority);
@@ -85,11 +84,6 @@ public class CustomerProductService {
 						 */
 						if (customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER)
 								|| customerProduct.getBuyStatus().equals(BuyStatus.WISHLISTED)) {
-							customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
-							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
-						}
-						if(customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER) || 
-								customerProduct.getBuyStatus().equals(BuyStatus.WISHLISTED)) {
 							customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
 							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 						}
@@ -135,6 +129,7 @@ public class CustomerProductService {
 					+ optionalCustomerProduct.get().getPriority() + " !!");
 		}
 	}
+
 
 	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(
 			long userId, Priority priority) {

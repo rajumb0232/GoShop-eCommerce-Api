@@ -22,28 +22,32 @@ import edu.goshop_ecommerce.util.ResponseStructure;
 public class ProductController {
 	@Autowired
 	private ProductService service;
-	
+
 	@PostMapping
-	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@RequestBody ProductRequest productRequest,@RequestParam long userId,@RequestParam long categoryId,@RequestParam long brandId){
+	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@RequestBody ProductRequest productRequest,
+			@RequestParam long userId, @RequestParam long categoryId, @RequestParam long brandId) {
 		return service.addProduct(productRequest, userId, categoryId, brandId);
 	}
+
 	@GetMapping
-	public ResponseEntity<ResponseStructure<ProductResponse>> getProductById(@RequestParam long productId){
+	public ResponseEntity<ResponseStructure<ProductResponse>> getProductById(@RequestParam long productId) {
 		return service.getProductById(productId);
 	}
+
 	@GetMapping("/bybrand")
-	public ResponseEntity<ResponseStructure<List<ProductResponse>>> getProductsByBrand(@RequestParam long brandId){
+	public ResponseEntity<ResponseStructure<List<ProductResponse>>> getProductsByBrand(@RequestParam long brandId) {
 		return service.getProductsByBrand(brandId);
 	}
+
 	@GetMapping("/bycategory")
-	public ResponseEntity<ResponseStructure<List<ProductResponse>>> getProductByCategory(@RequestParam long categoryId){
+	public ResponseEntity<ResponseStructure<List<ProductResponse>>> getProductByCategory(
+			@RequestParam long categoryId) {
 		return service.getProductByCategory(categoryId);
 	}
+
 	@DeleteMapping
-	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(@RequestParam long productId){
+	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(@RequestParam long productId) {
 		return service.deleteProduct(productId);
 	}
-	
-	
-	
+
 }
