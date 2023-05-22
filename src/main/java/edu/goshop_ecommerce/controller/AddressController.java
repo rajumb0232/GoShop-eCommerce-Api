@@ -13,6 +13,7 @@ import edu.goshop_ecommerce.dto.AddressRequest;
 import edu.goshop_ecommerce.dto.AddressResponse;
 import edu.goshop_ecommerce.service.AddressService;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/address")
@@ -21,7 +22,7 @@ public class AddressController {
 	private AddressService addressService;
 
 	@PostMapping
-	private ResponseEntity<ResponseStructure<AddressResponse>> addAddress(@RequestBody AddressRequest addressRequest,
+	private ResponseEntity<ResponseStructure<AddressResponse>> addAddress(@Valid @RequestBody AddressRequest addressRequest,
 			@RequestParam long userId) {
 		return addressService.addAddress(addressRequest, userId);
 	}
