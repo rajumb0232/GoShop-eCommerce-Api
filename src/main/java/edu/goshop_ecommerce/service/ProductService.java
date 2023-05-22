@@ -170,14 +170,58 @@ public class ProductService {
 			structure.setStatus(HttpStatus.OK.value());
 			
 			return new ResponseEntity<ResponseStructure<ProductResponse>>(structure,HttpStatus.OK);
-	
-			
+		
 		}
 		else {
 			throw new ProductNotFoundById("product not found");
+		}	
+	}
+	public ResponseEntity<ResponseStructure<ProductResponse>> updateProduct(long productId,
+			ProductRequest productRequest,long userId,long categoryId,long brandId){
+		Product existingProduct = productDao.findProduct(productId);
+		if(existingProduct!=null) {
+		Product product = this.modelMapper.map(productRequest, Product.class);
+		User user = userDao.findUserById(userId);
+		Optional<Category> optionalCategory = categoryDao.getCategoryById(categoryId);
+		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);	
+		if(user!=null) {
+			if(optionalCategory.isPresent()) {
+				if(optionalBrand.isPresent()) {
+					product.setProductId(productId);
+					product.setBrand(optionalBrand.get());
+					product.setCategory(optionalCategory.get());
+					product.setCustomerProducts(existingProduct.getCustomerProducts());
+					product.setReviews(existingProduct.getReviews());
+					product.setUser(user);
+					
+					product.setProductFinalePrice(product.getProductMRP()*(100-product.getProductdiscountInPercentage())/ 100);
+					
+					ProductResponse productResponse = this.modelMapper.map(productDao.addProduct(product), ProductResponse.class);
+					
+					ResponseStructure<ProductResponse> structure = new ResponseStructure<>();
+					structure.setData(productResponse);
+					structure.setMessage("product has been added");
+					structure.setStatus(HttpStatus.CREATED.value());
+					
+					return new ResponseEntity<ResponseStructure<ProductResponse>>(structure,HttpStatus.CREATED);
+				
+				}
+				else {
+					throw new BrandNotFoundByIdException("failed to update product");
+				}
+			}
+			else {
+				throw new CategoryNotFoundByIdException("failed to update product");
+			}	
+		}
+		else {
+			throw new UserNotFoundByIdException("failed to update product");
+		}
+		}
+		else {
+			throw new ProductNotFoundById("failed to update product");
 		}
 		
 	}
-	
-	
+		
 }
