@@ -2,6 +2,7 @@ package edu.goshop_ecommerce.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +41,9 @@ public class Product {
 	@JoinColumn
 	private Category category;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Review> reviews;
+	
+	@OneToMany(mappedBy = "product")
+	private List<CustomerProduct> customerProducts;
 }
