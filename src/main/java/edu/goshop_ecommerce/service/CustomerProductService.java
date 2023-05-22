@@ -162,6 +162,11 @@ public class CustomerProductService {
 		if (optional.isPresent()) {
 			CustomerProduct customerProduct = optional.get();
 			customerProduct.setBuyStatus(buyStatus);
+			if(buyStatus.equals(BuyStatus.WISHLISTED)) {
+				customerProduct.setPriority(Priority.WISHLIST);
+			}else {
+				customerProduct.setPriority(Priority.CART);
+			}
 			customerProductDao.addCustomerProduct(customerProduct);
 			CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct,
 					CustomerProductResponse.class);
