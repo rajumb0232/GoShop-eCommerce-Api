@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.goshop_ecommerce.dao.AddressDao;
 import edu.goshop_ecommerce.dao.CustomerOrderDao;
@@ -25,6 +26,7 @@ import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.OrderStatus;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
@@ -99,7 +101,7 @@ public class CustomerOrderService {
 				
 			}
 		}
-		throw new UserNotFoundByIdException("user not found by given id"); 	
+		throw new UserNotFoundByIdException("failed to add customer order"); 	
 	}
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> findCustomerOrder(long customerOrderId){
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
@@ -114,8 +116,26 @@ public class CustomerOrderService {
 			return new ResponseEntity<ResponseStructure<CustomerOrderResponse>>(structure, HttpStatus.FOUND);
 			
 		}
-		throw new CustomerProductNotFoundByIdException("customer order not found by given id");
+		throw new CustomerProductNotFoundByIdException("customer order not found");
 	}
 	
+	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(@RequestParam OrderStatus orderStatus,long customerOrderId){
+		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
+		if(customerOrder!=null) {
+			customerOrder.setOrderStatus(orderStatus);
+			customerOrderDao.addCustomerOrder(customerOrder);
+			
+			ResponseStructure<CustomerOrderResponse> structure = new ResponseStructure<>();
+			structure.setData(this.modelMapper.map(customerOrder,CustomerOrderResponse.class));
+			structure.setMessage("ocustomer order updated");
+			structure.setStatus(HttpStatus.OK.value());
+			
+			return new ResponseEntity<ResponseStructure<CustomerOrderResponse>>(structure,HttpStatus.OK);
+			
+		}
+		else {
+			throw new CustomerOrderNotFoundById("failed to update customer order");
+		}
+	}
 	
 }
