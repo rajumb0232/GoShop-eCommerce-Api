@@ -1,5 +1,6 @@
 package edu.goshop_ecommerce.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import edu.goshop_ecommerce.dto.UserResponse;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.service.UserService;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -26,7 +28,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping
-	public ResponseEntity<ResponseStructure<UserResponse>> addUser(
+	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@Valid
 			@RequestBody UserRequest userRequest, @RequestParam UserRole userRole){
 		return userService.addUser(userRequest, userRole);
 	}
@@ -39,7 +41,7 @@ public class UserController {
 	
 	@PutMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(
-			@RequestParam long userId, @RequestBody UserRequest userRequest){
+			@RequestParam long userId,@Valid @RequestBody UserRequest userRequest){
 		return userService.updateUser(userId, userRequest);
 	}
 	

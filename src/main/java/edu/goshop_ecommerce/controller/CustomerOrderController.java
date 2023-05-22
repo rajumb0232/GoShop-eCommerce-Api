@@ -15,6 +15,7 @@ import edu.goshop_ecommerce.dto.CustomerOrderResponse;
 import edu.goshop_ecommerce.enums.OrderStatus;
 import edu.goshop_ecommerce.service.CustomerOrderService;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping
@@ -23,7 +24,7 @@ public class CustomerOrderController {
 	private CustomerOrderService service;
 	
 	@PostMapping
-	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(@RequestParam long userId,@RequestParam long addressId,@RequestParam int productQuantity){
+	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(@RequestParam long userId, @RequestParam long addressId,@RequestParam int productQuantity){
 		return service.addCustomerOrder(userId, addressId, productQuantity);
 	}
 	@GetMapping

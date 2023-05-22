@@ -1,5 +1,6 @@
 package edu.goshop_ecommerce.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import edu.goshop_ecommerce.dto.CategoryRequest;
 import edu.goshop_ecommerce.dto.CategoryResponse;
 import edu.goshop_ecommerce.service.CategoryService;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/categories")
@@ -23,7 +25,7 @@ public class CategoryController {
 	private CategoryService categoryService;
 
 	@PostMapping
-	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(
+	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(@Valid
 			@RequestBody CategoryRequest categoryRequest) {
 		return categoryService.addCategory(categoryRequest);
 	}

@@ -2,11 +2,13 @@ package edu.goshop_ecommerce.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,7 @@ import edu.goshop_ecommerce.dto.ProductRequest;
 import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.service.ProductService;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
@@ -24,7 +27,7 @@ public class ProductController {
 	private ProductService service;
 
 	@PostMapping
-	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@RequestBody ProductRequest productRequest,
+	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@Valid @RequestBody ProductRequest productRequest,
 			@RequestParam long userId, @RequestParam long categoryId, @RequestParam long brandId) {
 		return service.addProduct(productRequest, userId, categoryId, brandId);
 	}
@@ -48,6 +51,10 @@ public class ProductController {
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(@RequestParam long productId) {
 		return service.deleteProduct(productId);
+	}
+	@PutMapping
+	public ResponseEntity<ResponseStructure<ProductResponse>> updateProduct(@RequestParam long productId,@Valid @RequestBody ProductRequest productRequest,@RequestParam long userId,@RequestParam long categoryId,@RequestParam long brandId) {
+		return service.updateProduct(productId, productRequest, userId, categoryId, brandId);
 	}
 
 }
