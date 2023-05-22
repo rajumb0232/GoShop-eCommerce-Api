@@ -10,13 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import edu.goshop_ecommerce.dao.CategoryDao;
+import edu.goshop_ecommerce.dao.UserDao;
 import edu.goshop_ecommerce.dto.CategoryRequest;
 import edu.goshop_ecommerce.dto.CategoryResponse;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.Product;
+import edu.goshop_ecommerce.entity.User;
+import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.exception.CategoryCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
@@ -25,18 +30,31 @@ public class CategoryService {
 	@Autowired
 	private CategoryDao categoryDao;
 	@Autowired
+	private UserDao userDao;
+	@Autowired
 	private ModelMapper modelMapper;
 
-	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(CategoryRequest categoryRequest) {
-		Category category = modelMapper.map(categoryRequest, Category.class);
-		category.setVarification(Verification.UNDER_REVIEW);
-		categoryDao.addCategory(category);
-		ResponseStructure<CategoryResponse> responseStructure = new ResponseStructure<>();
-		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessage("Category added");
-		CategoryResponse categoryResponse = modelMapper.map(category, CategoryResponse.class);
-		responseStructure.setData(categoryResponse);
-		return new ResponseEntity<ResponseStructure<CategoryResponse>>(responseStructure, HttpStatus.CREATED);
+	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(long merchantId,
+			CategoryRequest categoryRequest) {
+		User user = userDao.findUserById(merchantId);
+		if (user != null) {
+			if (user.getUserRole().equals(UserRole.MERCHANT)) {
+				Category category = modelMapper.map(categoryRequest, Category.class);
+				category.setVarification(Verification.UNDER_REVIEW);
+				categoryDao.addCategory(category);
+				ResponseStructure<CategoryResponse> responseStructure = new ResponseStructure<>();
+				responseStructure.setStatus(HttpStatus.CREATED.value());
+				responseStructure.setMessage("Category added");
+				CategoryResponse categoryResponse = modelMapper.map(category, CategoryResponse.class);
+				responseStructure.setData(categoryResponse);
+				return new ResponseEntity<ResponseStructure<CategoryResponse>>(responseStructure, HttpStatus.CREATED);
+			} else {
+				throw new UserIsNotAMerchantException("Only merchant can add Brand");
+			}
+		} else {
+			throw new UserNotFoundByIdException("User not found");
+		}
+
 	}
 
 	public ResponseEntity<ResponseStructure<CategoryResponse>> updateCategory(long categoryId,
