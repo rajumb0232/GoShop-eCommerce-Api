@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.goshop_ecommerce.dao.AddressDao;
 import edu.goshop_ecommerce.dao.CustomerOrderDao;
@@ -119,7 +118,7 @@ public class CustomerOrderService {
 		throw new CustomerProductNotFoundByIdException("customer order not found");
 	}
 	
-	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(@RequestParam OrderStatus orderStatus,long customerOrderId){
+	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(OrderStatus orderStatus,long customerOrderId){
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
 		if(customerOrder!=null) {
 			customerOrder.setOrderStatus(orderStatus);
