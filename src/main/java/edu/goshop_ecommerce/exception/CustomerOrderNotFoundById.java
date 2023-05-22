@@ -2,7 +2,7 @@ package edu.goshop_ecommerce.exception;
 
 public class CustomerOrderNotFoundById extends RuntimeException{
 	
-	String message = "acustomer order not found";
+	String message ;
 
 	public String getMessage() {
 		return message;

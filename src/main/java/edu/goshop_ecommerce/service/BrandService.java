@@ -55,7 +55,7 @@ public class BrandService {
 			responseStructure.setData(brandResponse);
 			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.CREATED);
 		} else {
-			throw new BrandNotFoundByIdException("brand with given id not found");
+			throw new BrandNotFoundByIdException("Failed to update Brand.");
 		}
 
 	}
@@ -66,7 +66,7 @@ public class BrandService {
 			Brand brand = optionalBrand.get();
 			List<Product> products = brand.getProducts();
 			if (products != null && products.size() > 0) {
-				throw new BrandCanNotBeDeletedException("brand cannot be deleted since it has products");
+				throw new BrandCanNotBeDeletedException("Failed to delete Brand.");
 			} else {
 				brandDao.deleteBrandById(brandId);
 				ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
@@ -77,7 +77,7 @@ public class BrandService {
 				return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.NOT_FOUND);
 			}
 		} else {
-			throw new BrandNotFoundByIdException("brand with given id not found");
+			throw new BrandNotFoundByIdException("Failed to delete Brand.");
 		}
 	}
 }

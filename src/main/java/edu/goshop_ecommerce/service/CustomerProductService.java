@@ -131,6 +131,7 @@ public class CustomerProductService {
 		}
 	}
 
+
 	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(
 			long userId, Priority priority) {
 		User user = userDao.findUserById(userId);
@@ -181,5 +182,6 @@ public class CustomerProductService {
 			throw new CustomerProductNotFoundByIdException("Failed to update CustomerProduct!!");
 		}
 	}
-
+	
+	
 }

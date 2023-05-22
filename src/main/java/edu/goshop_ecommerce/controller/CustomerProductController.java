@@ -47,5 +47,6 @@ public class CustomerProductController {
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
 			@RequestParam long customerProductId, @RequestParam BuyStatus buyStatus){
 		return customerproductService.updateCustomerProductBuyStatus(customerProductId, buyStatus);
+
 	}
 }

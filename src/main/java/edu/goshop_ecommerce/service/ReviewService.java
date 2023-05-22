@@ -84,7 +84,7 @@ public class ReviewService {
 			responseStructure.setData(review);
 			return new ResponseEntity<ResponseStructure<Review>>(responseStructure, HttpStatus.CREATED);
 		} else {
-			throw new ReviewNotFoundByIdException("review with a given id not found");
+			throw new ReviewNotFoundByIdException("Failed to update Review.");
 		}
 
 	}
