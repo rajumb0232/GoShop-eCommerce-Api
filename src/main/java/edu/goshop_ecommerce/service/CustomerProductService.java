@@ -21,6 +21,7 @@ import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
+import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
@@ -98,7 +99,7 @@ public class CustomerProductService {
 					return new ResponseEntity<ResponseStructure<CustomerProductResponse>>(responseStructure,
 							HttpStatus.CREATED);
 				} else
-					return null;
+					throw new ProductNotFoundById("Failed to add Products to " + priority + " !!");
 			} else
 				throw new UserIsNotACustomerException("Failed to add Products to " + priority + " !!");
 
