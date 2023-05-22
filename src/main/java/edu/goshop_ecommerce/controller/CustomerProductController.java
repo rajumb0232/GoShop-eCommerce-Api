@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.goshop_ecommerce.dto.CustomerProductResponse;
+import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
 import edu.goshop_ecommerce.service.CustomerProductService;
 import edu.goshop_ecommerce.util.ResponseStructure;
@@ -22,22 +24,28 @@ public class CustomerProductController {
 
 	@Autowired
 	private CustomerProductService customerproductService;
-	
+
 	@PostMapping
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> addCustomerProduct(
-			@RequestParam Priority priority, @RequestParam long productId, @RequestParam long userId){
+			@RequestParam Priority priority, @RequestParam long productId, @RequestParam long userId) {
 		return customerproductService.addCustomerProduct(priority, productId, userId);
 	}
-	
+
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> deleteCustomerProduct(
-			@RequestParam long CustomerProductId){
+			@RequestParam long CustomerProductId) {
 		return customerproductService.deleteCustomerProduct(CustomerProductId);
 	}
-	
+
 	@GetMapping
 	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(
-			@RequestParam long userId, @RequestParam Priority priority){
+			@RequestParam long userId, @RequestParam Priority priority) {
 		return customerproductService.getCustomerProductsByUserByPriority(userId, priority);
+	}
+	
+	@PutMapping
+	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
+			@RequestParam long customerProductId, @RequestParam BuyStatus buyStatus){
+		return customerproductService.updateCustomerProductBuyStatus(customerProductId, buyStatus);
 	}
 }
