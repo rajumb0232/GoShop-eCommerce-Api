@@ -172,7 +172,7 @@ public class CustomerProductService {
 					CustomerProductResponse.class);
 			ResponseStructure<CustomerProductResponse> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatus(HttpStatus.OK.value());
-			responseStructure.setMessage("CustomerProducts found.");
+			responseStructure.setMessage("CustomerProducts updated successfully.");
 			responseStructure.setData(customerProductResponse);
 			return new ResponseEntity<ResponseStructure<CustomerProductResponse>>(responseStructure,
 					HttpStatus.OK);
