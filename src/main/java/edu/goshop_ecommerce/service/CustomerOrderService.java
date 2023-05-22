@@ -119,7 +119,7 @@ public class CustomerOrderService {
 		throw new CustomerProductNotFoundByIdException("customer order not found");
 	}
 	
-	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(@RequestParam OrderStatus orderStatus,long customerOrderId){
+	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(OrderStatus orderStatus,long customerOrderId){
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
 		if(customerOrder!=null) {
 			customerOrder.setOrderStatus(orderStatus);
