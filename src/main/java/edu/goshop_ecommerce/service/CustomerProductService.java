@@ -21,6 +21,7 @@ import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
+import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.util.ResponseStructure;
@@ -43,15 +44,17 @@ public class CustomerProductService {
 		if (user != null) {
 			if (user.getUserRole().equals(UserRole.CUSTOMER)) {
 				Product product = productDao.findProduct(productId);
-
-				if(product!=null) {
-					Optional<CustomerProduct> exCustomerProduct = customerProductDao.getCustomerProductByProduct(product);
-		/*
-		 * check if the product present as CustomerProduct*/
+				if (product != null) {
+					Optional<CustomerProduct> exCustomerProduct = customerProductDao
+							.getCustomerProductByProduct(product);
+					/*
+					 * check if the product present as CustomerProduct
+					 */
 					CustomerProduct customerProduct = new CustomerProduct();
-					if(exCustomerProduct.isEmpty()) {
+					if (exCustomerProduct.isEmpty()) {
 						/*
-						 * if not present create CustoemrProduct*/
+						 * if not present create CustoemrProduct
+						 */
 						customerProduct.setUser(user);
 						customerProduct.setProduct(product);
 						customerProduct.setPriority(priority);
@@ -67,12 +70,21 @@ public class CustomerProductService {
 						productDao.addProduct(product);
 					} else {
 						customerProduct = exCustomerProduct.get();
+						/*
+						 * if the product is already present in the Buy_now status with cart priority
+						 * then the quantity will be increased by one.
+						 */
 						if (customerProduct.getBuyStatus().equals(BuyStatus.BUY_NOW)) {
 							customerProduct.setProductQuantity(customerProduct.getProductQuantity() + 1);
 							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 						}
-						if(customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER) || 
-								customerProduct.getBuyStatus().equals(BuyStatus.WISHLISTED)) {
+						/*
+						 * if the product is already present in BuyLater status with cart priority then
+						 * the product will be moved from status buy_later to but_now, the quantity will
+						 * be one.
+						 */
+						if (customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER)
+								|| customerProduct.getBuyStatus().equals(BuyStatus.WISHLISTED)) {
 							customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
 							customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 						}
@@ -87,7 +99,7 @@ public class CustomerProductService {
 					return new ResponseEntity<ResponseStructure<CustomerProductResponse>>(responseStructure,
 							HttpStatus.CREATED);
 				} else
-					return null;
+					throw new ProductNotFoundById("Failed to add Products to " + priority + " !!");
 			} else
 				throw new UserIsNotACustomerException("Failed to add Products to " + priority + " !!");
 
@@ -120,28 +132,55 @@ public class CustomerProductService {
 	}
 
 
-
-
-	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(long userId, Priority priority) {
+	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByUserByPriority(
+			long userId, Priority priority) {
 		User user = userDao.findUserById(userId);
-		if(user!=null) {
-			if(user.getUserRole().equals(UserRole.CUSTOMER)) {
-			 List<CustomerProduct> customerProducts = customerProductDao.getCustomerProductsByUserByPriority(user, priority);
-			 List<CustomerProductResponse> customerProductResponses = new ArrayList<>();
-			 for(CustomerProduct customerProduct : customerProducts) {
-				CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct, CustomerProductResponse.class);
-				customerProductResponses.add(customerProductResponse);
-			 }
+		if (user != null) {
+			if (user.getUserRole().equals(UserRole.CUSTOMER)) {
+				List<CustomerProduct> customerProducts = customerProductDao.getCustomerProductsByUserByPriority(user,
+						priority);
+				List<CustomerProductResponse> customerProductResponses = new ArrayList<>();
+				for (CustomerProduct customerProduct : customerProducts) {
+					CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct,
+							CustomerProductResponse.class);
+					customerProductResponses.add(customerProductResponse);
+				}
 				ResponseStructure<List<CustomerProductResponse>> responseStructure = new ResponseStructure<>();
 				responseStructure.setStatus(HttpStatus.OK.value());
 				responseStructure.setMessage("CustomerProducts found.");
 				responseStructure.setData(customerProductResponses);
-				return new ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> (responseStructure, HttpStatus.OK);
-			}else {
+				return new ResponseEntity<ResponseStructure<List<CustomerProductResponse>>>(responseStructure,
+						HttpStatus.OK);
+			} else {
 				throw new UserIsNotACustomerException("Failed to find CustomerProduct !!");
 			}
-		}else 
+		} else
 			throw new CustomerProductNotFoundByIdException("Failed to find CustomerProduct !!");
+	}
+
+	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
+			long customerProductId, BuyStatus buyStatus) {
+		Optional<CustomerProduct> optional = customerProductDao.getCustomerProductById(customerProductId);
+		if (optional.isPresent()) {
+			CustomerProduct customerProduct = optional.get();
+			customerProduct.setBuyStatus(buyStatus);
+			if(buyStatus.equals(BuyStatus.WISHLISTED)) {
+				customerProduct.setPriority(Priority.WISHLIST);
+			}else {
+				customerProduct.setPriority(Priority.CART);
+			}
+			customerProductDao.addCustomerProduct(customerProduct);
+			CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct,
+					CustomerProductResponse.class);
+			ResponseStructure<CustomerProductResponse> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatus(HttpStatus.OK.value());
+			responseStructure.setMessage("CustomerProducts updated successfully.");
+			responseStructure.setData(customerProductResponse);
+			return new ResponseEntity<ResponseStructure<CustomerProductResponse>>(responseStructure,
+					HttpStatus.OK);
+		} else {
+			throw new CustomerProductNotFoundByIdException("Failed to update CustomerProduct!!");
+		}
 	}
 	
 	

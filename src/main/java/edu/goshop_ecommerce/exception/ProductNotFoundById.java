@@ -2,7 +2,7 @@ package edu.goshop_ecommerce.exception;
 
 public class ProductNotFoundById extends RuntimeException {
 	
-	String message = "product not found";
+	String message;
 
 	public ProductNotFoundById(String message) {
 		this.message = message;
@@ -11,10 +11,5 @@ public class ProductNotFoundById extends RuntimeException {
 	public String getMessage() {
 		return message;
 	}
-
-	
-	
-	
-	
 	
 }
