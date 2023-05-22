@@ -1,5 +1,6 @@
 package edu.goshop_ecommerce.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/categories")
@@ -34,7 +36,7 @@ public class CategoryController {
 			@ApiResponse(responseCode = "400", description = "failed to add category", content = {
 					@Content(schema = @Schema) }) })
 	@PostMapping("/{merchantId}")
-	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(@PathVariable long merchantId,
+	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(@PathVariable long merchantId,@Valid
 			@RequestBody CategoryRequest categoryRequest) {
 		return categoryService.addCategory(merchantId, categoryRequest);
 	}

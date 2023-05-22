@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/address")
@@ -32,8 +33,8 @@ public class AddressController {
 			@ApiResponse(responseCode = "400", description = "failed to add address", content = {
 					@Content(schema = @Schema) }) })
 	@PostMapping
-	private ResponseEntity<ResponseStructure<AddressResponse>> addAddress(@RequestBody AddressRequest addressRequest,
-			@RequestParam long userId) {
+	private ResponseEntity<ResponseStructure<AddressResponse>> addAddress(
+			@Valid @RequestBody AddressRequest addressRequest, @RequestParam long userId) {
 		return addressService.addAddress(addressRequest, userId);
 	}
 

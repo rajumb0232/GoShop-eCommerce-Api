@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -37,7 +38,7 @@ public class UserController {
 			@ApiResponse(responseCode = "400", description = "failed to add user", content = {
 					@Content(schema = @Schema) }) })
 	@PostMapping
-	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@RequestBody UserRequest userRequest,
+	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@Valid @RequestBody UserRequest userRequest,
 			@RequestParam UserRole userRole) {
 		return userService.addUser(userRequest, userRole);
 	}
@@ -60,7 +61,7 @@ public class UserController {
 					@Content(schema = @Schema) }) })
 	@PutMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(@RequestParam long userId,
-			@RequestBody UserRequest userRequest) {
+			@Valid @RequestBody UserRequest userRequest) {
 		return userService.updateUser(userId, userRequest);
 	}
 

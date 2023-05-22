@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
@@ -35,8 +37,9 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "failed to add product", content = {
 					@Content(schema = @Schema) }) })
 	@PostMapping
-	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(@RequestBody ProductRequest productRequest,
-			@RequestParam long userId, @RequestParam long categoryId, @RequestParam long brandId) {
+	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(
+			@Valid @RequestBody ProductRequest productRequest, @RequestParam long userId, @RequestParam long categoryId,
+			@RequestParam long brandId) {
 		return service.addProduct(productRequest, userId, categoryId, brandId);
 	}
 
@@ -79,6 +82,13 @@ public class ProductController {
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(@RequestParam long productId) {
 		return service.deleteProduct(productId);
+	}
+
+	@PutMapping
+	public ResponseEntity<ResponseStructure<ProductResponse>> updateProduct(@RequestParam long productId,
+			@Valid @RequestBody ProductRequest productRequest, @RequestParam long userId, @RequestParam long categoryId,
+			@RequestParam long brandId) {
+		return service.updateProduct(productId, productRequest, userId, categoryId, brandId);
 	}
 
 }
