@@ -56,7 +56,7 @@ public class CategoryService {
 			responseStructure.setData(categoryResponse);
 			return new ResponseEntity<ResponseStructure<CategoryResponse>>(responseStructure, HttpStatus.CREATED);
 		} else {
-			throw new CategoryNotFoundByIdException("category with given id not found");
+			throw new CategoryNotFoundByIdException("Failed to update Category.");
 		}
 	}
 
@@ -66,7 +66,7 @@ public class CategoryService {
 			Category category = optionalCategory.get();
 			List<Product> products = category.getProducts();
 			if (products != null && products.size() > 0) {
-				throw new CategoryCanNotBeDeletedException("category cannot be deleted since it has products");
+				throw new CategoryCanNotBeDeletedException("Failed to delete Category.");
 			} else {
 				categoryDao.deleteCategoryById(categoryId);
 				ResponseStructure<CategoryResponse> responseStructure = new ResponseStructure<>();
@@ -77,7 +77,7 @@ public class CategoryService {
 				return new ResponseEntity<ResponseStructure<CategoryResponse>>(responseStructure, HttpStatus.OK);
 			}
 		} else {
-			throw new CategoryNotFoundByIdException("category with given id not found");
+			throw new CategoryNotFoundByIdException("Failed to delete Category.");
 		}
 	}
 
