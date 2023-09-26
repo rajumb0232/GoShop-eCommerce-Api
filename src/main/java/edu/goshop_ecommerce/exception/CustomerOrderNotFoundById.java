@@ -1,5 +1,6 @@
 package edu.goshop_ecommerce.exception;
 
+@SuppressWarnings("serial")
 public class CustomerOrderNotFoundById extends RuntimeException{
 	
 	String message ;
