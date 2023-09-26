@@ -28,11 +28,14 @@ public class UserRequest {
 	@Max(value = 9999999999l, message = " phone number must be valid")
 	@Schema(required = true)
 	private long userPhoneNumber;
+	@NotBlank
+	@NotNull
 	@Column(unique = true)
 	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email ")
 	@Schema(required = true)
 	private String userEmail;
 	@NotBlank(message = "Password is required")
+	@NotNull
 	@Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "must contain at least one letter, one number, one special character")
 	@Schema(required = true)
