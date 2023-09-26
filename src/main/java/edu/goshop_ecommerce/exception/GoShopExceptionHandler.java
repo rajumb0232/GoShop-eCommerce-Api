@@ -3,10 +3,13 @@ package edu.goshop_ecommerce.exception;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,10 +18,33 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import edu.goshop_ecommerce.util.ErrorStructure;
 import edu.goshop_ecommerce.util.ResponseStructure;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestControllerAdvice
 public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
+
+	@Autowired
+	private ErrorStructure error;
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ErrorStructure> UserNameNotFound(BadCredentialsException ex) {
+		log.error(ex.getMessage()+" : Invalid email or password. Please check your credentials!!");
+		error.setMessage("Failed to Authenticate the User!!");
+		error.setStatus(HttpStatus.NOT_FOUND.value());
+		error.setRootCause("Invalid email or password. Please check your credentials!!");
+		return new ResponseEntity<ErrorStructure>(error, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ErrorStructure> deniedAccessDenied(AccessDeniedException ex) {
+		log.error(ex.getMessage()+" : User is not authorized!!");
+		error.setMessage("Failed to access requested resource.");
+		error.setStatus(HttpStatus.UNAUTHORIZED.value());
+		error.setRootCause(ex.getMessage()+" | Not authorized to access the requested resource.");
+		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
+	}
 
 	@ExceptionHandler
 	public ResponseEntity<ResponseStructure<String>> AdministratorCannotBeAdded(

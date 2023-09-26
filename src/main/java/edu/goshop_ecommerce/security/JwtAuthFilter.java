@@ -40,22 +40,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		log.info("Authenticating user Access Token...");
 		String token = request.getHeader("Authorization");
-
+		String userName = null;
 		try {
 			if (token != null && token.startsWith("Bearer ")) {
 				token = token.substring(7);
-				String userName = jwtService.ExtractUserName(token);
+				userName = jwtService.ExtractUserName(token);
 				log.info("username extracted from token");
-				if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-					UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-					if (jwtService.validateToken(token, userDetails)) {
-						log.info("username is valid");
-						UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-								userName, userDetails);
-						authToken.setDetails(new WebAuthenticationDetails(request));
-						SecurityContextHolder.getContext().setAuthentication(authToken);
-						log.info("User authenticated successfully");
-					}
+			}
+			if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+				if (jwtService.validateToken(token, userDetails)) {
+					log.info("username is valid");
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+							userName, userDetails);
+					authToken.setDetails(new WebAuthenticationDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authToken);
+					log.info("User authenticated successfully");
 				}
 			}
 		} catch (ExpiredJwtException e) {
@@ -63,7 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		} catch (JwtException e) {
 			handleOtherJwtException(response, e);
 		}
-
+		filterChain.doFilter(request, response);
 	}
 
 	private void handleJwtTokenExpiredException(HttpServletResponse response, ExpiredJwtException e) throws StreamWriteException, DatabindException, IOException {
