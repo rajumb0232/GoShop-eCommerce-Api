@@ -28,7 +28,7 @@ public class AddressService {
 	@Autowired
 	private UserDao userDao;
 	
-	public ResponseEntity<ResponseStructure<AddressResponse>> addAddress(AddressRequest addressRequest,long userId){
+	public ResponseEntity<ResponseStructure<AddressResponse>> addAddress(AddressRequest addressRequest){
 		Address address = this.modelMapper.map(addressRequest, Address.class);
 		User user = userDao.findUserById(userId);
 		if(user !=null) {

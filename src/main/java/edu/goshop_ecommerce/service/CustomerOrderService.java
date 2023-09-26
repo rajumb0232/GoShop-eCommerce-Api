@@ -85,8 +85,8 @@ public class CustomerOrderService {
 						
 						UserResponse userResponse = this.modelMapper.map(order.getUser(), UserResponse.class);
 						AddressResponse addressResponse = this.modelMapper.map(address, AddressResponse.class);
-						response.setAddressResponse(addressResponse);
-						response.setUserResponse(userResponse);
+						response.setAddress(addressResponse);
+						response.setCustomer(userResponse);
 						
 						customerOrderResponses.add(response);
 					}
