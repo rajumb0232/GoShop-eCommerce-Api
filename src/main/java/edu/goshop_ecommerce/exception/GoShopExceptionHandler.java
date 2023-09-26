@@ -1,14 +1,24 @@
 package edu.goshop_ecommerce.exception;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @RestControllerAdvice
-public class GoShopExceptionHandler {
+public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler
 	public ResponseEntity<ResponseStructure<String>> AdministratorCannotBeAdded(
@@ -130,6 +140,20 @@ public class GoShopExceptionHandler {
 		responseStructure.setMessage(ex.getMessage());
 		responseStructure.setData("product not found");
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+		List<ObjectError> list = e.getAllErrors();
+		HashMap<String, String> hashMap = new HashMap<>();
+		for (ObjectError error : list) {
+			String fieldName = ((FieldError) error).getField();
+			String message = error.getDefaultMessage();
+			hashMap.put(fieldName, message);
+		}
+		return new ResponseEntity<Object>(hashMap, HttpStatus.BAD_REQUEST);
 	}
 
 }
