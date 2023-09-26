@@ -113,6 +113,7 @@ public class UserService {
 			user.setUserRole(exUser.getUserRole());
 			user.setVerification(user.getVerification());
 			user.setUserId(exUser.getUserId());
+			user.setUserCreatedDateTime(exUser.getUserCreatedDateTime());
 			user = userDao.addUser(user);
 			
 			UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
