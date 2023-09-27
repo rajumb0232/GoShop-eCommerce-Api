@@ -1,6 +1,5 @@
 package edu.goshop_ecommerce.dto;
 
-import edu.goshop_ecommerce.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 @Getter
@@ -16,7 +15,6 @@ public class AddressResponse {
 	private String country;
 	private int pincode;
 	
-	private User user;
 
 	
 }

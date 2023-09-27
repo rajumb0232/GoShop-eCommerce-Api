@@ -3,12 +3,16 @@ package edu.goshop_ecommerce.dto;
 import java.time.LocalDateTime;
 
 import edu.goshop_ecommerce.enums.OrderStatus;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CustomerOrderResponse {
 	private long customerOrderId;
 	private LocalDateTime orderedDateTime;
@@ -23,13 +27,13 @@ public class CustomerOrderResponse {
 	private int productQuantity;
 	
 	// user entity with role merchant
-	private long userId;
-	private String userFirstName;
-	private String userSecondName;
-	private String UserEmail;
+	private long merchantId;
+	private String merchantFirstName;
+	private String merchantSecondName;
+	private String merchantEmail;
 
-	private AddressResponse addressResponse;
+	private AddressResponse address;
 	
 	// user entity with role customer
-	private UserResponse userResponse;
+	private UserResponse customer;
 }

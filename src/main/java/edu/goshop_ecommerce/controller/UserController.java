@@ -2,6 +2,7 @@ package edu.goshop_ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ public class UserController {
 					@Content(schema = @Schema) }) })
 	@PostMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@Valid @RequestBody UserRequest userRequest,
-			@RequestParam UserRole userRole) {
+			@RequestParam String userRole) {
 		return userService.addUser(userRequest, userRole);
 	}
 
@@ -73,5 +74,13 @@ public class UserController {
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser(@RequestParam long userId) {
 		return userService.deleteUser(userId);
+	}
+
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//	@Secured({"ADMINISTRATOR"})
+	@PutMapping("/verification-status/{status}/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponse>> updateUserVerificationStatus(@PathVariable String status,
+			@PathVariable long userId) {
+		return userService.updateUserVerificationStatus(status, userId);
 	}
 }
