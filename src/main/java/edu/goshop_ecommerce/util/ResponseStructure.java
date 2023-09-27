@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder@NoArgsConstructor
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class ResponseStructure<T> {
 

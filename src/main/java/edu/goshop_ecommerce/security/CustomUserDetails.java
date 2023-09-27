@@ -11,10 +11,9 @@ import edu.goshop_ecommerce.entity.User;
 
 @SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails {
-	
+
 	private User user;
-	
-	
+
 	public CustomUserDetails(User user) {
 		super();
 		this.user = user;
@@ -22,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().name())) ;
+		return Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().name()));
 	}
 
 	@Override

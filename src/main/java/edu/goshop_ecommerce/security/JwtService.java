@@ -4,12 +4,14 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import edu.goshop_ecommerce.entity.RefreshToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -73,5 +75,12 @@ public class JwtService {
 	public boolean validateToken(String token, UserDetails userDetails) {
 		log.info("Validating the token...");
 		return (ExtractUserName(token).equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+
+	public RefreshToken generateRefreshToken() {
+		RefreshToken token = new RefreshToken();
+		token.setExpiration(new Date(System.currentTimeMillis()));
+		token.setRefreshToken(UUID.randomUUID().toString());
+		return token;
 	}
 }

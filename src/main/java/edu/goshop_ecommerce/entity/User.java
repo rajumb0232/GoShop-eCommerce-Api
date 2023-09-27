@@ -6,10 +6,12 @@ import java.util.List;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,4 +43,7 @@ public class User {
 	
 	@OneToMany(mappedBy = "user")
 	private List<CustomerOrder> customerOrders;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private RefreshToken refreshToken;
 }
