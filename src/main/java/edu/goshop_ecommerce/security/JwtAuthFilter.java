@@ -52,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				if (jwtService.validateToken(token, userDetails)) {
 					log.info("username is valid");
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-							userName, userDetails);
+							userName,null, userDetails.getAuthorities());
 					authToken.setDetails(new WebAuthenticationDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(authToken);
 					log.info("User authenticated successfully");

@@ -19,10 +19,10 @@ public class CustomUserDetailService {
 	UserDetailsService userDetailsService() {
 		return userEmail -> {
 			User user = userRepo.findByUserEmail(userEmail);
-			if(user!=null)
+			if (user != null)
 				return new CustomUserDetails(user);
 			else
 				throw new UsernameNotFoundException("Failed to find the User with requested username/email.");
-	};
+		};
 	}
 }
