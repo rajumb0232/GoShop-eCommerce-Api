@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import edu.goshop_ecommerce.entity.RefreshToken;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
@@ -19,5 +20,7 @@ public interface UserRepo extends JpaRepository<User, Long>{
 	public Optional<List<User>> getAllUsersByRole(UserRole userRole);
 
 	public User findByUserEmail(String userEmail);
+
+	public User findByRefreshToken(RefreshToken refreshToken);
 
 }

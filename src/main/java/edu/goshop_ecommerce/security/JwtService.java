@@ -79,7 +79,8 @@ public class JwtService {
 
 	public RefreshToken generateRefreshToken() {
 		RefreshToken token = new RefreshToken();
-		token.setExpiration(new Date(System.currentTimeMillis()));
+		// correct expiration here
+		token.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 20));
 		token.setRefreshToken(UUID.randomUUID().toString());
 		return token;
 	}
