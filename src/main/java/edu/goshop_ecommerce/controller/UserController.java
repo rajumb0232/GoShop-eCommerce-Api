@@ -2,13 +2,13 @@ package edu.goshop_ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
 @Tag(name = "User", description = "User REST API's")
 public class UserController {
 
@@ -35,11 +34,10 @@ public class UserController {
 	@ApiResponses({
 			@ApiResponse(responseCode = "201", description = "user added", content = {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
-			@ApiResponse(responseCode = "400", description = "failed to add user", content = {
-					@Content(schema = @Schema) }) })
-	@PostMapping
+			@ApiResponse(responseCode = "400", description = "failed to add user") })
+	@PostMapping("/users")
 	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@Valid @RequestBody UserRequest userRequest,
-			@RequestParam UserRole userRole) {
+			@RequestParam String userRole) {
 		return userService.addUser(userRequest, userRole);
 	}
 
@@ -48,7 +46,7 @@ public class UserController {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "user not found", content = {
 					@Content(schema = @Schema) }) })
-	@GetMapping("/{userRole}")
+	@GetMapping("/users/{userRole}")
 	public ResponseEntity<ResponseStructure<UserResponse>> getUserByIdByRole(@RequestParam long userId,
 			@PathVariable UserRole userRole) {
 		return userService.getUserByIdByRole(userId, userRole);
@@ -59,8 +57,8 @@ public class UserController {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "failed to update user", content = {
 					@Content(schema = @Schema) }) })
-	@PutMapping
-	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(@RequestParam long userId,
+	@PutMapping("/users/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(@PathVariable long userId,
 			@Valid @RequestBody UserRequest userRequest) {
 		return userService.updateUser(userId, userRequest);
 	}
@@ -70,8 +68,19 @@ public class UserController {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "user not found", content = {
 					@Content(schema = @Schema) }) })
-	@DeleteMapping
-	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser(@RequestParam long userId) {
+	@DeleteMapping("/users/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser(@PathVariable long userId) {
 		return userService.deleteUser(userId);
+	}
+
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "user Verification Status updated", content = {
+					@Content(schema = @Schema(implementation = UserResponse.class)) }),
+			@ApiResponse(responseCode = "404", description = "user not found with requested Id") })
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	@PutMapping("/verification-status/{status}/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponse>> updateUserVerificationStatus(@PathVariable String status,
+			@PathVariable long userId) {
+		return userService.updateUserVerificationStatus(status, userId);
 	}
 }

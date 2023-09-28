@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public class ProductController {
 					@Content(schema = @Schema(implementation = ProductResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "failed to add product", content = {
 					@Content(schema = @Schema) }) })
+	@Secured({"MERCHANT"})
 	@PostMapping
 	public ResponseEntity<ResponseStructure<ProductResponse>> addProduct(
 			@Valid @RequestBody ProductRequest productRequest, @RequestParam long userId, @RequestParam long categoryId,
@@ -79,6 +81,7 @@ public class ProductController {
 					@Content(schema = @Schema(implementation = ProductResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "product not found", content = {
 					@Content(schema = @Schema) }) })
+	@Secured({"MERCHANT"})
 	@DeleteMapping
 	public ResponseEntity<ResponseStructure<ProductResponse>> deleteProduct(@RequestParam long productId) {
 		return service.deleteProduct(productId);
