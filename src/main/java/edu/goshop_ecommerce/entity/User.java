@@ -30,7 +30,8 @@ public class User {
 	private String userPassword;
 	private LocalDateTime userCreatedDateTime;
 	private UserRole userRole;
-	private Verification verification ;
+	private Verification verification;
+	private boolean isDeleted;
 	
 	@OneToMany(mappedBy = "user")
 	private List<Address> addresses;

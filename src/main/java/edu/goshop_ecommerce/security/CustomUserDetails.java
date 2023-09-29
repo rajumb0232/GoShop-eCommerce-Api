@@ -54,4 +54,11 @@ public class CustomUserDetails implements UserDetails {
 		return true;
 	}
 
+	/*
+	 * used to mark if the user account is deleted
+	 */
+	public boolean isDeleted() {
+		return user.isDeleted();
+	}
+
 }

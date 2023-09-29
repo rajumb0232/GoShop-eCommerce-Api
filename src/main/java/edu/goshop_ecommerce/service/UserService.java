@@ -10,14 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import edu.goshop_ecommerce.dao.AddressDao;
-import edu.goshop_ecommerce.dao.CustomerOrderDao;
-import edu.goshop_ecommerce.dao.CustomerProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.entity.Address;
-import edu.goshop_ecommerce.entity.CustomerOrder;
-import edu.goshop_ecommerce.entity.CustomerProduct;
-import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.enums.Verification;
@@ -25,10 +18,13 @@ import edu.goshop_ecommerce.exception.AdministratorCannotBeAddedException;
 import edu.goshop_ecommerce.exception.AdministratorCannotBeDeletedException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
+import edu.goshop_ecommerce.request_dto.PasswordRequest;
 import edu.goshop_ecommerce.request_dto.UserRequest;
 import edu.goshop_ecommerce.response_dto.UserResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -37,66 +33,83 @@ public class UserService {
 	@Autowired
 	private ModelMapper modelMapper;
 	@Autowired
-	private CustomerOrderDao customerOrderDao;
-	@Autowired
-	private CustomerProductDao customerProductDao;
-	@Autowired
-	private AddressDao addressDao;
-	@Autowired
-	private ProductService productService;
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	public ResponseEntity<ResponseStructure<UserResponse>> addUser(UserRequest userRequest, String userRoleString) {
-		String message = null;
+
+		log.info("Registering user...");
+
 		User user = this.modelMapper.map(userRequest, User.class);
-		user.setUserCreatedDateTime(LocalDateTime.now());
-		UserResponse userResponse = null;
 		UserRole userRole = UserRole.valueOf(userRoleString.toUpperCase());
-		if (userRole.equals(UserRole.MERCHANT)) {
 
-			user.setUserRole(UserRole.MERCHANT);
+		if (userRole.equals(UserRole.MERCHANT))
 			user.setVerification(Verification.UNDER_REVIEW);
-			message = "Merchant added successfully!!";
-
-		} else if (userRole.equals(UserRole.CUSTOMER)) {
-			user.setUserRole(UserRole.CUSTOMER);
+		else if (userRole.equals(UserRole.CUSTOMER))
 			user.setVerification(Verification.VERIFIED);
-			message = "Customer added successfully!!";
+		else if (userRole.equals(UserRole.ADMINISTRATOR)) {
 
-		} else if (userRole.equals(UserRole.ADMINISTRATOR)) {
 			List<User> users = userDao.getAllUsersByRole(userRole);
-			if (users.size() == 0) {
-				user.setUserRole(UserRole.ADMINISTRATOR);
+			if (users.size() == 0)
 				user.setVerification(Verification.VERIFIED);
-				message = "Administrator added successfully!!";
+			else
+				throw new AdministratorCannotBeAddedException("Failed to register user for role - administrator!!");
 
-			} else
-				throw new AdministratorCannotBeAddedException("Failed to add administrator!!");
 		}
-		user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+
+		user.setUserRole(userRole);
+		user.setUserCreatedDateTime(LocalDateTime.now());
+		user.setDeleted(false);
+
 		user = userDao.addUser(user);
-		userResponse = this.modelMapper.map(user, UserResponse.class);
+		log.info("Successfully registered user with for role - " + userRoleString + ".");
+
+		UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+
 		ResponseStructure<UserResponse> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessage(message);
+		responseStructure.setMessage("Successfully registered user with for role - " + userRoleString + ".");
 		responseStructure.setData(userResponse);
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.CREATED);
+	}
+
+	public ResponseEntity<ResponseStructure<UserResponse>> addUserPassword(PasswordRequest passwordRequest,
+			long userId) {
+		User user = userDao.findUserById(userId);
+		if (user != null) {
+
+			user.setUserPassword(passwordEncoder.encode(passwordRequest.getUserPassword()));
+
+			user = userDao.addUser(user);
+
+			UserResponse response = modelMapper.map(user, UserResponse.class);
+
+			ResponseStructure<UserResponse> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatus(HttpStatus.OK.value());
+			responseStructure.setMessage("add password to user successfully");
+			responseStructure.setData(response);
+
+			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
+
+		} else
+			throw new UserNotFoundByIdException("Failed to find User!!");
 	}
 
 	public ResponseEntity<ResponseStructure<UserResponse>> getUserByIdByRole(long userId, UserRole userRole) {
 		User user = userDao.findUserById(userId);
 		if (user != null) {
 			if (user.getUserRole().equals(userRole)) {
+
 				UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+
 				ResponseStructure<UserResponse> responseStructure = new ResponseStructure<>();
 				responseStructure.setStatus(HttpStatus.FOUND.value());
 				responseStructure.setMessage("User found with role: " + userRole + ".");
 				responseStructure.setData(userResponse);
+
 				return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.FOUND);
+
 			} else
 				throw new UserNotPresentWithRoleException("Failed to find User!!");
-
 		} else
 			throw new UserNotFoundByIdException("Failed to find User!!");
 	}
@@ -105,14 +118,16 @@ public class UserService {
 		User exUser = userDao.findUserById(userId);
 		if (exUser != null) {
 			User user = this.modelMapper.map(userRequest, User.class);
+			user = this.modelMapper.map(exUser, User.class);
 			user.setAddresses(exUser.getAddresses());
-			user.setCustomerOrders(exUser.getCustomerOrders());
-			user.setCustomerProducts(exUser.getCustomerProducts());
-			user.setUserRole(exUser.getUserRole());
-			user.setVerification(user.getVerification());
-			user.setUserId(exUser.getUserId());
-			user.setUserCreatedDateTime(exUser.getUserCreatedDateTime());
-			user = userDao.addUser(user);
+
+//			user.setCustomerOrders(exUser.getCustomerOrders());
+//			user.setCustomerProducts(exUser.getCustomerProducts());
+//			user.setUserRole(exUser.getUserRole());
+//			user.setVerification(user.getVerification());
+//			user.setUserId(exUser.getUserId());
+//			user.setUserCreatedDateTime(exUser.getUserCreatedDateTime());
+//			user = userDao.addUser(user);
 
 			UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
 
@@ -120,7 +135,9 @@ public class UserService {
 			responseStructure.setStatus(HttpStatus.OK.value());
 			responseStructure.setMessage("User with role " + user.getUserRole() + " is been updated successfully!!");
 			responseStructure.setData(userResponse);
+
 			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
+
 		} else {
 			throw new UserNotFoundByIdException("Failed to update User!!");
 		}
@@ -130,35 +147,11 @@ public class UserService {
 		User exUser = userDao.findUserById(userId);
 		if (exUser != null) {
 			if (!exUser.getUserRole().equals(UserRole.ADMINISTRATOR)) {
-
-				if (exUser.getUserRole().equals(UserRole.CUSTOMER)) {
-					for (CustomerOrder customerOrder : exUser.getCustomerOrders()) {
-						customerOrder.setUser(null);
-						customerOrder.setAddress(null);
-						customerOrderDao.addCustomerOrder(customerOrder);
-					}
-					userDao.deleteUser(exUser);
-					for (Address address : exUser.getAddresses()) {
-						addressDao.deleteAddress(address);
-					}
-					for (CustomerProduct customerProduct : exUser.getCustomerProducts()) {
-						customerProductDao.deleteCustomerProduct(customerProduct);
-					}
-				}
-
-				if (exUser.getUserRole().equals(UserRole.MERCHANT)) {
-					// call delete products method from product service.
-					for (Product product : exUser.getProducts()) {
-						for (CustomerProduct customerProduct : product.getCustomerProducts()) {
-							customerProductDao.deleteCustomerProduct(customerProduct);
-						}
-						productService.deleteProduct(product.getProductId());
-					}
-				}
+				exUser.setDeleted(true);
+				userDao.addUser(exUser);
 			} else
 				throw new AdministratorCannotBeDeletedException(
-						"Failed to delete User with role " + exUser.getUserRole() + " !!");
-
+						"Cannot delete User with role " + exUser.getUserRole() + " !!");
 		}
 		throw new UserNotFoundByIdException("Failed to delete User!!");
 	}
@@ -174,8 +167,8 @@ public class UserService {
 			responseStructure.setMessage("User Verification status updated successfuly.");
 			responseStructure.setStatus(HttpStatus.OK.value());
 			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
-		}else
-			throw new UserNotFoundByIdException("Failed to update the user verification status.");
+		} else
+			throw new UserNotFoundByIdException("Failed to update the user Verification Status.");
 	}
 
 }

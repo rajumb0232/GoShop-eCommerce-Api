@@ -38,6 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		log.atTrace();
 		log.info("Authenticating user Access Token...");
 		String token = request.getHeader("Authorization");
 		String userName = null;
@@ -78,7 +79,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	}
 	
 
-	private void handleOtherJwtException(HttpServletResponse response, JwtException e) throws StreamWriteException, DatabindException, IOException {
+	private void handleOtherJwtException(HttpServletResponse response, JwtException e)
+			throws StreamWriteException, DatabindException, IOException {
 		log.error("Error authenticating user : " + e.getMessage());
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setHeader("error", e.getMessage());
