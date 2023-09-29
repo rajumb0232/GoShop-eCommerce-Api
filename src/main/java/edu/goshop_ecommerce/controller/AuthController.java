@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.AuthRequest;
-import edu.goshop_ecommerce.dto.AuthResponse;
-import edu.goshop_ecommerce.dto.RefreshTokenRequest;
+import edu.goshop_ecommerce.request_dto.AuthRequest;
+import edu.goshop_ecommerce.request_dto.RefreshTokenRequest;
+import edu.goshop_ecommerce.response_dto.AuthResponse;
 import edu.goshop_ecommerce.service.AuthService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;

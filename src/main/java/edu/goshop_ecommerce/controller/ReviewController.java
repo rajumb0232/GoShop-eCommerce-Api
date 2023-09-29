@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.ReviewRequest;
 import edu.goshop_ecommerce.entity.Review;
+import edu.goshop_ecommerce.request_dto.ReviewRequest;
 import edu.goshop_ecommerce.service.ReviewService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;

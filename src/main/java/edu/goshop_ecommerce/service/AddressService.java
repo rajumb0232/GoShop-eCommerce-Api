@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 
 import edu.goshop_ecommerce.dao.AddressDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.AddressRequest;
-import edu.goshop_ecommerce.dto.AddressResponse;
 import edu.goshop_ecommerce.entity.Address;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.AddressNotFoundById;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.request_dto.AddressRequest;
+import edu.goshop_ecommerce.response_dto.AddressResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

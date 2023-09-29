@@ -14,8 +14,6 @@ import edu.goshop_ecommerce.dao.AddressDao;
 import edu.goshop_ecommerce.dao.CustomerOrderDao;
 import edu.goshop_ecommerce.dao.CustomerProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.UserRequest;
-import edu.goshop_ecommerce.dto.UserResponse;
 import edu.goshop_ecommerce.entity.Address;
 import edu.goshop_ecommerce.entity.CustomerOrder;
 import edu.goshop_ecommerce.entity.CustomerProduct;
@@ -27,6 +25,8 @@ import edu.goshop_ecommerce.exception.AdministratorCannotBeAddedException;
 import edu.goshop_ecommerce.exception.AdministratorCannotBeDeletedException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
+import edu.goshop_ecommerce.request_dto.UserRequest;
+import edu.goshop_ecommerce.response_dto.UserResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

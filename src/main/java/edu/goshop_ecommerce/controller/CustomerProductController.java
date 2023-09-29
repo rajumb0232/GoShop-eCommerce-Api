@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.CustomerProductResponse;
 import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
+import edu.goshop_ecommerce.response_dto.CustomerProductResponse;
 import edu.goshop_ecommerce.service.CustomerProductService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;

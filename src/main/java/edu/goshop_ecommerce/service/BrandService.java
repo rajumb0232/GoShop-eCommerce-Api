@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.BrandRequest;
-import edu.goshop_ecommerce.dto.BrandResponse;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
@@ -22,6 +20,8 @@ import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.request_dto.BrandRequest;
+import edu.goshop_ecommerce.request_dto.BrandResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

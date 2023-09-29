@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import edu.goshop_ecommerce.dao.CategoryDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.CategoryRequest;
-import edu.goshop_ecommerce.dto.CategoryResponse;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
@@ -22,6 +20,8 @@ import edu.goshop_ecommerce.exception.CategoryCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.request_dto.CategoryRequest;
+import edu.goshop_ecommerce.response_dto.CategoryResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.UserRequest;
-import edu.goshop_ecommerce.dto.UserResponse;
 import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.request_dto.UserRequest;
+import edu.goshop_ecommerce.response_dto.UserResponse;
 import edu.goshop_ecommerce.service.UserService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +36,7 @@ public class UserController {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "failed to add user") })
 	@PostMapping("/users")
-	public ResponseEntity<ResponseStructure<UserResponse>> addUser(@Valid @RequestBody UserRequest userRequest,
+	public ResponseEntity<ResponseStructure<UserResponse>> register(@Valid @RequestBody UserRequest userRequest,
 			@RequestParam String userRole) {
 		return userService.addUser(userRequest, userRole);
 	}

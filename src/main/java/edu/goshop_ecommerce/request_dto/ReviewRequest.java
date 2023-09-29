@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.dto;
+package edu.goshop_ecommerce.request_dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

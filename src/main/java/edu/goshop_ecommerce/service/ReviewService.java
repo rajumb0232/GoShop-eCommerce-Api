@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import edu.goshop_ecommerce.dao.ProductDao;
 import edu.goshop_ecommerce.dao.ReviewDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.ReviewRequest;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.Review;
 import edu.goshop_ecommerce.entity.User;
@@ -21,6 +20,7 @@ import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.ReviewNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.request_dto.ReviewRequest;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

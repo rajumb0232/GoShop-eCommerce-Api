@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.CategoryRequest;
-import edu.goshop_ecommerce.dto.CategoryResponse;
+import edu.goshop_ecommerce.request_dto.CategoryRequest;
+import edu.goshop_ecommerce.response_dto.CategoryResponse;
 import edu.goshop_ecommerce.service.CategoryService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;

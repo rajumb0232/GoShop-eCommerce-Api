@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.goshop_ecommerce.dto.ProductRequest;
-import edu.goshop_ecommerce.dto.ProductResponse;
+import edu.goshop_ecommerce.request_dto.ProductRequest;
+import edu.goshop_ecommerce.response_dto.ProductResponse;
 import edu.goshop_ecommerce.service.ProductService;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import io.swagger.v3.oas.annotations.media.Content;
