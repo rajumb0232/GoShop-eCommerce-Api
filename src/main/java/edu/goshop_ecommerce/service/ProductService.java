@@ -14,10 +14,6 @@ import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.dao.CategoryDao;
 import edu.goshop_ecommerce.dao.ProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.BrandResponse;
-import edu.goshop_ecommerce.dto.CategoryResponse;
-import edu.goshop_ecommerce.dto.ProductRequest;
-import edu.goshop_ecommerce.dto.ProductResponse;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.CustomerProduct;
@@ -27,6 +23,10 @@ import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
 import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.request_dto.BrandResponse;
+import edu.goshop_ecommerce.request_dto.ProductRequest;
+import edu.goshop_ecommerce.response_dto.CategoryResponse;
+import edu.goshop_ecommerce.response_dto.ProductResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

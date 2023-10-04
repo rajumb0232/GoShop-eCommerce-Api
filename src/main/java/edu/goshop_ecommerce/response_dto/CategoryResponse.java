@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.dto;
+package edu.goshop_ecommerce.response_dto;
 
 import edu.goshop_ecommerce.enums.Verification;
 import lombok.Getter;

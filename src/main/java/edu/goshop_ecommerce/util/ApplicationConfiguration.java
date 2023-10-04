@@ -1,48 +1,57 @@
 package edu.goshop_ecommerce.util;
 
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
+@OpenAPIDefinition
 public class ApplicationConfiguration {
 
-	@Bean
-	OpenAPI getusersMicroserviceOpenAPI() {
+	/*
+	 * Spring Doc
+	 */
+	private License license() {
+		return new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+	}
 
-		Server devServer = new Server();
-		devServer.setUrl("http://localhost:9300");
-		devServer.setDescription("Server URL in Development environment");
-
-		Server prodServer = new Server();
-		prodServer.setUrl("http://localhost:9300/swagger-ui/index.html");
-		prodServer.setDescription("Swagger URL in Production environment");
-
-		Contact contact = new Contact();
-		contact.setEmail("info@AppDomainName.in");
-		contact.setName("GoShop-eCommerce-Api");
-		contact.setUrl("https://www.AppDomainName.in");
-
-		License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
-
-		Info info = new Info().title("GoShop-eCommerce-Api RESTful web service documentation").version("1.0")
-				.contact(contact).description("This API exposes endpoints to manage GoShop-eCommerce-Api.")
-				.termsOfService("https://www.AppDomainName.com/terms").license(mitLicense);
-
-		return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
+	private Info info() {
+		return new Info().title("GoShop-eCommerce-Api RESTful API documentation").version("1.0.0").description(
+				"### The documentation provides the detailed information of a GoShop-eCommerce-Api RESTful service."
+						+ " The API deals with User, Product and Cart Modules."
+						+ " User will be able to register with either of Administrator, Merchant or Customer role."
+						+ " <br>Tech-Stack - `Spring Boot` `Spring Data JPA` `MySQL-Database` `Spring Security - for authorization`"
+						+ " `JWT - for Authentication`.")
+				.license(license());
 	}
 
 	@Bean
+	OpenAPI baseOpenAPI() {
+		return new OpenAPI().info(info());
+	}
+
+	/*
+	 * The Bean is used to map DTO object to corresponding Entity object and
+	 * Visa-Versa
+	 */
+	@Bean
 	ModelMapper getModelMapper() {
 		return new ModelMapper();
+	}
+	
+	public static <T> ResponseEntity<ResponseStructure<T>> getResponseEntity(T data, String message, HttpStatus httpStatus){
+		ResponseStructure<T> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(httpStatus.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(data);
+		return new ResponseEntity<ResponseStructure<T>>(responseStructure, httpStatus);
 	}
 
 }

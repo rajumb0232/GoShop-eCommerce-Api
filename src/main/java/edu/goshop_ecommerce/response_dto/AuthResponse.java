@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.dto;
+package edu.goshop_ecommerce.response_dto;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
