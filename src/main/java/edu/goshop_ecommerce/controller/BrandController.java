@@ -33,8 +33,8 @@ public class BrandController {
 					@Content(schema = @Schema(implementation = BrandResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "failed to add brand", content = {
 					@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
-	@PreAuthorize("hasAuthority('MERCHANT') OR hasAuthority('ADMINISTRATOR')")
-	@PostMapping("/{merchantId}")
+	@PreAuthorize("hasAuthority('MERCHANT')")
+	@PostMapping("/brands")
 	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(@RequestBody BrandRequest brandRequest) {
 		return brandService.addBrand(brandRequest);
 	}
@@ -45,7 +45,7 @@ public class BrandController {
 							@Content(schema = @Schema(implementation = BrandResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update brand", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
-	@PreAuthorize("hasAuthority('MERCHANT') OR hasAuthority('ADMINISTRATOR')")
+	@PreAuthorize("hasAuthority('MERCHANT')")
 	@PutMapping("/{brandId}")
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(@PathVariable long brandId,
 			@RequestBody BrandRequest brandRequest) {

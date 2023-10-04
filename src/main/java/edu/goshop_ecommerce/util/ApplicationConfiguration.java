@@ -3,6 +3,8 @@ package edu.goshop_ecommerce.util;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -42,6 +44,14 @@ public class ApplicationConfiguration {
 	@Bean
 	ModelMapper getModelMapper() {
 		return new ModelMapper();
+	}
+	
+	public static <T> ResponseEntity<ResponseStructure<T>> getResponseEntity(T data, String message, HttpStatus httpStatus){
+		ResponseStructure<T> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(httpStatus.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(data);
+		return new ResponseEntity<ResponseStructure<T>>(responseStructure, httpStatus);
 	}
 
 }

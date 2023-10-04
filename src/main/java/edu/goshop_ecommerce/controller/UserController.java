@@ -68,10 +68,10 @@ public class UserController {
 					@ApiResponse(responseCode = "200", description = "user updated", content = {
 							@Content(schema = @Schema(implementation = UserResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update user") })
-	@PutMapping("/users/{userId}")
-	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(@PathVariable long userId,
+	@PutMapping("/users")
+	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(
 			@Valid @RequestBody UserRequest userRequest) {
-		return userService.updateUser(userId, userRequest);
+		return userService.updateUser(userRequest);
 	}
 
 	@Operation(description = "**Delete User -**"
@@ -79,9 +79,9 @@ public class UserController {
 					@ApiResponse(responseCode = "200", description = "user deleted", content = {
 							@Content(schema = @Schema(implementation = UserResponse.class)) }),
 					@ApiResponse(responseCode = "404", description = "user not found") })
-	@DeleteMapping("/users/{userId}")
-	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser(@PathVariable long userId) {
-		return userService.deleteUser(userId);
+	@DeleteMapping("/users")
+	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser() {
+		return userService.deleteUser();
 	}
 
 	@Operation(description = "**Verify User -**"
