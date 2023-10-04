@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.dto;
+package edu.goshop_ecommerce.request_dto;
 
 import lombok.Data;
 

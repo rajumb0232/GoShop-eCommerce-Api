@@ -14,9 +14,6 @@ import edu.goshop_ecommerce.dao.AddressDao;
 import edu.goshop_ecommerce.dao.CustomerOrderDao;
 import edu.goshop_ecommerce.dao.ProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.AddressResponse;
-import edu.goshop_ecommerce.dto.CustomerOrderResponse;
-import edu.goshop_ecommerce.dto.UserResponse;
 import edu.goshop_ecommerce.entity.Address;
 import edu.goshop_ecommerce.entity.CustomerOrder;
 import edu.goshop_ecommerce.entity.CustomerProduct;
@@ -28,6 +25,9 @@ import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.response_dto.AddressResponse;
+import edu.goshop_ecommerce.response_dto.CustomerOrderResponse;
+import edu.goshop_ecommerce.response_dto.UserResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service

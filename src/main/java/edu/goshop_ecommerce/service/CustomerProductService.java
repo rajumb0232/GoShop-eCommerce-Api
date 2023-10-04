@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import edu.goshop_ecommerce.dao.CustomerProductDao;
 import edu.goshop_ecommerce.dao.ProductDao;
 import edu.goshop_ecommerce.dao.UserDao;
-import edu.goshop_ecommerce.dto.CustomerProductResponse;
 import edu.goshop_ecommerce.entity.CustomerProduct;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
@@ -24,6 +23,7 @@ import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
 import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.response_dto.CustomerProductResponse;
 import edu.goshop_ecommerce.util.ResponseStructure;
 
 @Service
