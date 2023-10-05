@@ -17,7 +17,7 @@ public class UserDao {
 	@Autowired
 	private UserRepo userRepo;
 	
-	public User addUser(User user) {
+	public User saveUser(User user) {
 		return userRepo.save(user);
 	}
 	

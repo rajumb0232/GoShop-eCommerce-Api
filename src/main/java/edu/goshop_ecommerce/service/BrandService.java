@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import edu.goshop_ecommerce.dao.BrandDao;
@@ -21,11 +19,13 @@ import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
-import edu.goshop_ecommerce.repo.UserRepo;
 import edu.goshop_ecommerce.request_dto.BrandRequest;
 import edu.goshop_ecommerce.request_dto.BrandResponse;
+import edu.goshop_ecommerce.util.ResponseEntityProxy;
 import edu.goshop_ecommerce.util.ResponseStructure;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class BrandService {
 
@@ -34,14 +34,13 @@ public class BrandService {
 	@Autowired
 	private ModelMapper modelMapper;
 	@Autowired
-	private UserRepo userRepo;
+	private ResponseEntityProxy responseEntity;
+	@Autowired
+	private AuthService authService;
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(BrandRequest brandRequest) {
-
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByUserEmail(authentication.getName());
-
-		ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
+		log.info("Creating brand");
+		User user = authService.getAutheticatedUser();
 
 		if (user != null) {
 
@@ -55,17 +54,15 @@ public class BrandService {
 
 			brandDao.addBrand(brand);
 			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-			responseStructure.setStatus(HttpStatus.CREATED.value());
-			responseStructure.setMessage("Brand added");
-			responseStructure.setData(brandResponse);
-			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.CREATED);
+			log.info("Brand successfully created");
+			return responseEntity.getResponseEntity(brandResponse, "Successfully created Brand", HttpStatus.CREATED);
 
 		} else
 			throw new UserNotFoundByIdException("User not found");
 	}
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(long brandId, BrandRequest brandRequest) {
-
+		log.info("updating brand details");
 		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
 		Brand brand = this.modelMapper.map(brandRequest, Brand.class);
 
@@ -81,12 +78,8 @@ public class BrandService {
 			brandDao.addBrand(brand);
 
 			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-
-			ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
-			responseStructure.setStatus(HttpStatus.CREATED.value());
-			responseStructure.setMessage("Brand updated");
-			responseStructure.setData(brandResponse);
-			return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.CREATED);
+			log.info("successfully updated brand details");
+			return responseEntity.getResponseEntity(brandResponse, "successfully updated brand details", HttpStatus.OK);
 
 		} else {
 			throw new BrandNotFoundByIdException("Failed to update Brand.");
@@ -95,7 +88,7 @@ public class BrandService {
 	}
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> deleteBrandById(long brandId) {
-
+		log.info("deleting brand data");
 		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
 
 		if (optionalBrand.isPresent()) {
@@ -112,12 +105,8 @@ public class BrandService {
 				brandDao.deleteBrandById(brandId);
 
 				BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-
-				ResponseStructure<BrandResponse> responseStructure = new ResponseStructure<>();
-				responseStructure.setStatus(HttpStatus.OK.value());
-				responseStructure.setMessage("Brand with given id deleted");
-				responseStructure.setData(brandResponse);
-				return new ResponseEntity<ResponseStructure<BrandResponse>>(responseStructure, HttpStatus.NOT_FOUND);
+				log.info("successfully deleted the brand");
+				return responseEntity.getResponseEntity(brandResponse, "successfully deleted the brand", HttpStatus.OK);
 
 			}
 		} else {
