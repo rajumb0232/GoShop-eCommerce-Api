@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import edu.goshop_ecommerce.entity.CustomerProduct;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
+import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.Priority;
 import edu.goshop_ecommerce.repo.CustomerProductRepo;
 
@@ -41,6 +42,10 @@ public class CustomerProductDao {
 
 	public Optional<CustomerProduct> getCustomerProductById(long customerProductId) {
 		return customerProductRepo.findById(customerProductId);
+	}
+
+	public List<CustomerProduct> findByBuyStatusByUser(User user, BuyStatus buyNow) {
+		return customerProductRepo.findByBuyStatusByUser(user, buyNow);
 	}
 	
 }
