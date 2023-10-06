@@ -21,7 +21,6 @@ import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
 import edu.goshop_ecommerce.request_dto.PasswordRequest;
 import edu.goshop_ecommerce.request_dto.UserRequest;
 import edu.goshop_ecommerce.response_dto.UserResponse;
-import edu.goshop_ecommerce.security.CustomUserDetailService;
 import edu.goshop_ecommerce.util.ResponseEntityProxy;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ public class UserService {
 	@Autowired
 	private ResponseEntityProxy responseEntity;
 	@Autowired
-	private CustomUserDetailService userService;
+	private AuthService authService;
 
 	public ResponseEntity<ResponseStructure<UserResponse>> addUser(UserRequest userRequest, String userRoleString) {
 
@@ -65,7 +64,7 @@ public class UserService {
 		user.setUserCreatedDateTime(LocalDateTime.now());
 		user.setDeleted(false);
 
-		user = userDao.addUser(user);
+		user = userDao.saveUser(user);
 		log.info("Successfully registered user with for role - " + userRoleString);
 
 		UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
@@ -75,23 +74,27 @@ public class UserService {
 
 	public ResponseEntity<ResponseStructure<UserResponse>> addUserPassword(PasswordRequest passwordRequest,
 			long userId) {
+		log.info("adding password to user");
 		User user = userDao.findUserById(userId);
 		if (user != null) {
 
 			user.setUserPassword(passwordEncoder.encode(passwordRequest.getUserPassword()));
-			user = userDao.addUser(user);
+			user = userDao.saveUser(user);
 			UserResponse response = modelMapper.map(user, UserResponse.class);
+			log.info("Successfully added password to user");
 			return responseEntity.getResponseEntity(response, "Add password to user successfully", HttpStatus.OK);
 		} else
 			throw new UserNotFoundByIdException("Failed to find User!!");
 	}
 
 	public ResponseEntity<ResponseStructure<UserResponse>> getUserByIdByRole(long userId, UserRole userRole) {
+		log.info("Fetching user by userId and userRole");
 		User user = userDao.findUserById(userId);
 		if (user != null) {
 			if (user.getUserRole().equals(userRole)) {
 
 				UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+				log.info("found user by userId and userRole");
 				return responseEntity.getResponseEntity(userResponse, "User found with role:" + userRole,
 						HttpStatus.FOUND);
 			} else
@@ -101,7 +104,8 @@ public class UserService {
 	}
 
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(UserRequest userRequest) {
-		User exUser = userService.getAutheticatedUser();
+		log.info("updating the user details");
+		User exUser = authService.getAutheticatedUser();
 		if (exUser != null) {
 			User user = this.modelMapper.map(userRequest, User.class);
 			user = this.modelMapper.map(exUser, User.class);
@@ -116,21 +120,24 @@ public class UserService {
 //			user = userDao.addUser(user);
 
 			UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+			log.info("successfully updated user deatils");
 			return responseEntity.getResponseEntity(userResponse,
 					"User with role " + user.getUserRole() + " is been updated successfully!!", HttpStatus.OK);
 		} else {
 			throw new UserNotFoundByIdException("Failed to update User!!");
 		}
 	}
-	
+
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser() {
-		User exUser = userService.getAutheticatedUser();
+		log.info("deleting the user account");
+		User exUser = authService.getAutheticatedUser();
 		if (exUser != null) {
 			if (!exUser.getUserRole().equals(UserRole.ADMINISTRATOR)) {
 
 				exUser.setDeleted(true);
-				userDao.addUser(exUser);
+				userDao.saveUser(exUser);
 				UserResponse userResponse = this.modelMapper.map(exUser, UserResponse.class);
+				log.info("successfuly deleted the user account");
 				return responseEntity.getResponseEntity(userResponse,
 						"User with role " + exUser.getUserRole() + " is been deleted successfully!!", HttpStatus.OK);
 			} else
@@ -141,12 +148,14 @@ public class UserService {
 	}
 
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUserVerificationStatus(String status, long userId) {
+		log.info("Updating user Verification status to " + status.toUpperCase());
 		User user = userDao.findUserById(userId);
 		if (user != null) {
 
 			user.setVerification(Verification.valueOf(status.toUpperCase()));
-			user = userDao.addUser(user);
+			user = userDao.saveUser(user);
 			UserResponse response = modelMapper.map(user, UserResponse.class);
+			log.info("updated user verification status to " + status.toUpperCase() + " successfully");
 			return responseEntity.getResponseEntity(response, "User Verification status updated successfuly",
 					HttpStatus.OK);
 		} else

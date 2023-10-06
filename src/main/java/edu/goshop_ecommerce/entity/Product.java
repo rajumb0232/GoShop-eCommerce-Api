@@ -28,6 +28,7 @@ public class Product {
 	private double productFinalePrice;
 	private int productQuantity;
 	private float rating;
+	private boolean isDeleted;
 	
 	@ManyToOne
 	@JoinColumn
