@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +99,12 @@ public class AuthService {
 				throw new NoUserAccociatedWithRefreshTokenException("Failed to refresh Access Token.");
 		} else
 			throw new RefreshTokenNotFoundException("Failed to refresh Access Token.");
+	}
 
+	public User getAutheticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepo.findByUserEmail(authentication.getName());
+		return user;
 	}
 
 }

@@ -80,7 +80,7 @@ public class CustomerOrderService {
 						// user with role customer
 
 						user.getCustomerOrders().add(order);
-						userDao.addUser(user);
+						userDao.saveUser(user);
 						CustomerOrderResponse response = this.modelMapper.map(order, CustomerOrderResponse.class);
 						
 						UserResponse userResponse = this.modelMapper.map(order.getUser(), UserResponse.class);

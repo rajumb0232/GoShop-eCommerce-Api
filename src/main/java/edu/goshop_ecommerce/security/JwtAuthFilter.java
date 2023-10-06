@@ -52,8 +52,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 				if (jwtService.validateToken(token, userDetails)) {
 					log.info("username is valid");
-					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-							userName,null, userDetails.getAuthorities());
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userName,
+							null, userDetails.getAuthorities());
 					authToken.setDetails(new WebAuthenticationDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(authToken);
 					log.info("User authenticated successfully");
@@ -67,17 +67,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private void handleJwtTokenExpiredException(HttpServletResponse response, ExpiredJwtException e) throws StreamWriteException, DatabindException, IOException {
+	private void handleJwtTokenExpiredException(HttpServletResponse response, ExpiredJwtException e)
+			throws StreamWriteException, DatabindException, IOException {
 		log.error("Error Authenticating user : " + e.getMessage());
 		response.setHeader("error", e.getMessage());
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setContentType("Application/json");
-		new ErrorStructure();
 		ErrorStructure error = ErrorStructure.builder().status(HttpStatus.FORBIDDEN.value())
 				.message("Failed to authenticate the user").rootCause(e.getMessage()).build();
 		new ObjectMapper().writeValue(response.getOutputStream(), error);
 	}
-	
 
 	private void handleOtherJwtException(HttpServletResponse response, JwtException e)
 			throws StreamWriteException, DatabindException, IOException {
