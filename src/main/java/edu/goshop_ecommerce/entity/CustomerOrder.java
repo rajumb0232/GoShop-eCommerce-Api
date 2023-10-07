@@ -27,14 +27,14 @@ public class CustomerOrder {
 	private String productName;
 	private String productDescription;
 	private double productMRP;
-	private double productdiscountInPercentage;
+	private double productdiscount;
 	private double productFinalePrice;
 	private int productQuantity;
 	
-	private long userId;
-	private String userFirstName;
-	private String userSecondName;
-	private String UserEmail;
+	private long merchantId;
+	private String merchantFirstName;
+	private String merchatSecondName;
+	private String merchantEmail;
 
 	
 	@OneToOne
@@ -42,5 +42,5 @@ public class CustomerOrder {
 	
 	@ManyToOne
 	@JoinColumn
-	private User user;
+	private User customer;
 }

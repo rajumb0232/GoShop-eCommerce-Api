@@ -40,7 +40,7 @@ public class CustomerProductController {
 					@ApiResponse(responseCode = "400", description = "failed to create customerProduct", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('CUSTOMER')")
-	@PostMapping("/priority/{priority}/customer-products/products/{productId}")
+	@PostMapping("/priorities/{priority}/customer-products/products/{productId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> addCustomerProduct(
 			@RequestParam Priority priority, @PathVariable long productId) {
 		return customerproductService.addCustomerProduct(priority, productId);
@@ -53,7 +53,7 @@ public class CustomerProductController {
 					@ApiResponse(responseCode = "404", description = "customerProduct not found", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('CUSTOMER')")
-	@DeleteMapping
+	@DeleteMapping("/customer-products/{CustomerProductId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> deleteCustomerProduct(
 			@RequestParam long CustomerProductId) {
 		return customerproductService.deleteCustomerProduct(CustomerProductId);
@@ -67,7 +67,7 @@ public class CustomerProductController {
 					@ApiResponse(responseCode = "404", description = "customerProduct not found", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('CUSTOMER')")
-	@GetMapping
+	@GetMapping("/priorities/{priority}/customer-products")
 	public ResponseEntity<ResponseStructure<List<CustomerProductResponse>>> getCustomerProductsByPriority(
 			@RequestParam Priority priority) {
 		return customerproductService.getCustomerProductsByPriority(priority);
@@ -80,7 +80,7 @@ public class CustomerProductController {
 							@Content(schema = @Schema(implementation = CustomerProductResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update customerProduct", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
-	@PutMapping
+	@PutMapping("/buy-status/{buyStatus}/customer-products/{customerProductId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
 			@RequestParam long customerProductId, @RequestParam BuyStatus buyStatus) {
 		return customerproductService.updateCustomerProductBuyStatus(customerProductId, buyStatus);

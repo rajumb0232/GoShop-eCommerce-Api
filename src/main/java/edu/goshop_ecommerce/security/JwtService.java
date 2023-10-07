@@ -69,8 +69,8 @@ public class JwtService {
 	/**
 	 * @return {@link Boolean}
 	 *         <p>
-	 *         The validates is the userName against the userName in database, and checks
-	 *         whether the token is expired.
+	 *         The validates is the userName against the userName in database, and
+	 *         checks whether the token is expired.
 	 */
 	public boolean validateToken(String token, UserDetails userDetails) {
 		log.info("Validating the token...");
