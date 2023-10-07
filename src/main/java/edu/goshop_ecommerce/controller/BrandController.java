@@ -46,7 +46,7 @@ public class BrandController {
 					@ApiResponse(responseCode = "400", description = "failed to update brand", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('MERCHANT')")
-	@PutMapping("/{brandId}")
+	@PutMapping("/brands/{brandId}")
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(@PathVariable long brandId,
 			@RequestBody BrandRequest brandRequest) {
 		return brandService.updateBrand(brandId, brandRequest);
@@ -59,7 +59,7 @@ public class BrandController {
 					@ApiResponse(responseCode = "400", description = "failed to update brand", content = {
 							@Content(schema = @Schema) }) })
 	@PreAuthorize("hasAuthority('MERCHANT') OR hasAuthority('ADMINISTRATOR')")
-	@DeleteMapping("/{brandId}")
+	@DeleteMapping("/brands/{brandId}")
 	public ResponseEntity<ResponseStructure<BrandResponse>> deleteBrand(@PathVariable long brandId) {
 		return brandService.deleteBrandById(brandId);
 	}

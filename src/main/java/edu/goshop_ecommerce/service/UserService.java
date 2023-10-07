@@ -106,26 +106,22 @@ public class UserService {
 	public ResponseEntity<ResponseStructure<UserResponse>> updateUser(UserRequest userRequest) {
 		log.info("updating the user details");
 		User exUser = authService.getAutheticatedUser();
-		if (exUser != null) {
 			User user = this.modelMapper.map(userRequest, User.class);
-			user = this.modelMapper.map(exUser, User.class);
 			user.setAddresses(exUser.getAddresses());
 
-//			user.setCustomerOrders(exUser.getCustomerOrders());
-//			user.setCustomerProducts(exUser.getCustomerProducts());
-//			user.setUserRole(exUser.getUserRole());
-//			user.setVerification(user.getVerification());
-//			user.setUserId(exUser.getUserId());
-//			user.setUserCreatedDateTime(exUser.getUserCreatedDateTime());
-//			user = userDao.addUser(user);
+			user.setCustomerOrders(exUser.getCustomerOrders());
+			user.setCustomerProducts(exUser.getCustomerProducts());
+			user.setUserPassword(exUser.getUserPassword());
+			user.setUserRole(exUser.getUserRole());
+			user.setVerification(exUser.getVerification());
+			user.setUserId(exUser.getUserId());
+			user.setUserCreatedDateTime(exUser.getUserCreatedDateTime());
+			user = userDao.saveUser(user);
 
 			UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
 			log.info("successfully updated user deatils");
 			return responseEntity.getResponseEntity(userResponse,
 					"User with role " + user.getUserRole() + " is been updated successfully!!", HttpStatus.OK);
-		} else {
-			throw new UserNotFoundByIdException("Failed to update User!!");
-		}
 	}
 
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUser() {
