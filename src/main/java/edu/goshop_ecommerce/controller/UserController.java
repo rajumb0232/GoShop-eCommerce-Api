@@ -35,7 +35,7 @@ public class UserController {
 			@ApiResponse(responseCode = "201", description = "user successfully added", content = {
 					@Content(schema = @Schema(implementation = UserResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "failed to add user") })
-	@PostMapping("/user-roles/{userRole}/users")
+	@PostMapping("/user-roles/{userRole}/users/register")
 	public ResponseEntity<ResponseStructure<UserResponse>> register(@Valid @RequestBody UserRequest userRequest,
 			@PathVariable String userRole) {
 		return userService.addUser(userRequest, userRole);

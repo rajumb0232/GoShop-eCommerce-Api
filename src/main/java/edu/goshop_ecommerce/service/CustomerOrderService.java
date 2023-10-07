@@ -127,8 +127,18 @@ public class CustomerOrderService {
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
 
 		if (customerOrder != null) {
+
 			if (customerOrder.getCustomer().getUserId() == userId || customerOrder.getMerchantId() == userId) {
-				customerOrder.setOrderStatus(orderStatus);
+
+				if (user.getUserRole().equals(UserRole.CUSTOMER) && orderStatus.equals(OrderStatus.CANCELLED)) {
+					customerOrder.setOrderStatus(orderStatus);
+				} else
+					throw new UnAuthorizedToAccessException("Un-authorized action by the customer");
+
+				if (user.getUserRole().equals(UserRole.MERCHANT)) {
+					customerOrder.setOrderStatus(orderStatus);
+				}
+
 				customerOrderDao.addCustomerOrder(customerOrder);
 
 				CustomerOrderResponse customerOrderResponse = this.modelMapper.map(customerOrder,

@@ -2,6 +2,7 @@ package edu.goshop_ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class CategoryController {
 							@Content(schema = @Schema(implementation = CategoryResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to add category", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('MERCHANT')")
 	@PostMapping("/categories")
 	public ResponseEntity<ResponseStructure<CategoryResponse>> addCategory(
 			@Valid @RequestBody CategoryRequest categoryRequest) {
@@ -46,6 +48,7 @@ public class CategoryController {
 							@Content(schema = @Schema(implementation = CategoryResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update category", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('MERCHANT')")
 	@PutMapping("/categories/{categoryId}")
 	public ResponseEntity<ResponseStructure<CategoryResponse>> updateCategory(@PathVariable long categoryId,
 			@RequestBody CategoryRequest categoryRequest) {
@@ -60,6 +63,7 @@ public class CategoryController {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }),
 					@ApiResponse(responseCode = "404", description = "Category not found by unique-Id", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('MERCHANT') OR hasAuthority('ADMINISTRATOR')")
 	@DeleteMapping("/categories/{categoryId}")
 	public ResponseEntity<ResponseStructure<CategoryResponse>> deleteCategory(@PathVariable long categoryId) {
 		return categoryService.deleteCategoryById(categoryId);
