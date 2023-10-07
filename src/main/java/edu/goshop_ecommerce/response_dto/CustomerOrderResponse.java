@@ -22,7 +22,7 @@ public class CustomerOrderResponse {
 	private String productName;
 	private String productDescription;
 	private double productMRP;
-	private double productdiscountInPercentage;
+	private double productdiscount;
 	private double productFinalePrice;
 	private int productQuantity;
 	

@@ -42,7 +42,7 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<CustomerProduct> customerProducts;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "customer")
 	private List<CustomerOrder> customerOrders;
 	
 	@OneToOne(fetch = FetchType.LAZY)
