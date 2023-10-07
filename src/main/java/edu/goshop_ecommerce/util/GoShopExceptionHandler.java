@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.exception;
+package edu.goshop_ecommerce.util;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +18,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import edu.goshop_ecommerce.util.ErrorStructure;
-import edu.goshop_ecommerce.util.ResponseStructure;
+import edu.goshop_ecommerce.exception.AddressNotFoundById;
+import edu.goshop_ecommerce.exception.AdministratorCannotBeAddedException;
+import edu.goshop_ecommerce.exception.AdministratorCannotBeDeletedException;
+import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
+import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
+import edu.goshop_ecommerce.exception.CategoryCanNotBeDeletedException;
+import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
+import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
+import edu.goshop_ecommerce.exception.ExpiredRefreshTokenException;
+import edu.goshop_ecommerce.exception.NoUserAccociatedWithRefreshTokenException;
+import edu.goshop_ecommerce.exception.ProductNotFoundById;
+import edu.goshop_ecommerce.exception.RefreshTokenNotFoundException;
+import edu.goshop_ecommerce.exception.ReviewNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
+import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
+import edu.goshop_ecommerce.service.UnAuthorizedToAccessException;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
@@ -71,6 +86,15 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
 		error.setRootCause("The provided refresh token is not found or associated with the any user");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(UnAuthorizedToAccessException.class)
+	public ResponseEntity<ErrorStructure> handleUnAuthorizedToAccessException(UnAuthorizedToAccessException ex) {
+		log.error(ex.getMessage() + " : The  user is un-authorized to access this resource");
+		error.setMessage(ex.getMessage());
+		error.setStatus(HttpStatus.UNAUTHORIZED.value());
+		error.setRootCause("The  user is un-authorized to access this resource");
+		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler

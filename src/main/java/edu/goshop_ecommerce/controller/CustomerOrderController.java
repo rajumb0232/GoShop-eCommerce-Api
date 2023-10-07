@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +35,7 @@ public class CustomerOrderController {
 							@Content(schema = @Schema(implementation = CustomerOrderResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to add customerOrder", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('CUSTOMER')")
 	@PostMapping("/customer-orders")
 	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(@RequestParam long userId,
 			@RequestParam long addressId, @RequestParam int productQuantity) {
@@ -46,6 +48,7 @@ public class CustomerOrderController {
 							@Content(schema = @Schema(implementation = CustomerOrderResponse.class)) }),
 					@ApiResponse(responseCode = "404", description = "customerOrder not found", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('CUSTOMER') OR hasAuthority('MERCHANT') OR hasAuthority(ADMINISTRATOR)")
 	@GetMapping("/customer-orders/{customerOrderId}")
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> findCustomerOrder(
 			@RequestParam long customerOrderId) {
@@ -59,7 +62,8 @@ public class CustomerOrderController {
 							@Content(schema = @Schema(implementation = CustomerOrderResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update customerOrder", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
-	@PutMapping
+	@PreAuthorize("hasAuthority('CUSTOMER') OR hasAuthority('MERCHANT')")
+	@PutMapping("/order-status/{orderStatus}/customer-orders/{customerOrderId}")
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(
 			@RequestParam OrderStatus orderStatus, @RequestParam long customerOrderId) {
 		return service.updateCustomerOrder(orderStatus, customerOrderId);

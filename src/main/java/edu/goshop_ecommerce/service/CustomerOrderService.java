@@ -22,6 +22,7 @@ import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.enums.BuyStatus;
 import edu.goshop_ecommerce.enums.OrderStatus;
+import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
 import edu.goshop_ecommerce.response_dto.AddressResponse;
@@ -100,32 +101,45 @@ public class CustomerOrderService {
 	}
 
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> findCustomerOrder(long customerOrderId) {
+		User user = authService.getAutheticatedUser();
+		long userId = user.getUserId();
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
 
 		if (customerOrder != null) {
-			CustomerOrderResponse customerOrderResponse = this.modelMapper.map(customerOrder,
-					CustomerOrderResponse.class);
-			return responseEntity.getResponseEntity(customerOrderResponse, "Customer order found by given Id",
-					HttpStatus.FOUND);
+
+			if (customerOrder.getCustomer().getUserId() == userId || customerOrder.getMerchantId() == userId
+					|| user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
+				CustomerOrderResponse customerOrderResponse = this.modelMapper.map(customerOrder,
+						CustomerOrderResponse.class);
+				return responseEntity.getResponseEntity(customerOrderResponse, "Customer order found by given Id",
+						HttpStatus.FOUND);
+
+			} else
+				throw new UnAuthorizedToAccessException("Failed to fetch the customer order");
 		}
-		throw new CustomerProductNotFoundByIdException("customer order not found");
+		throw new CustomerProductNotFoundByIdException("Failed to fetch the customer order");
 	}
 
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> updateCustomerOrder(OrderStatus orderStatus,
 			long customerOrderId) {
+		User user = authService.getAutheticatedUser();
+		long userId = user.getUserId();
 		CustomerOrder customerOrder = customerOrderDao.findCustomerOrder(customerOrderId);
 
 		if (customerOrder != null) {
-			customerOrder.setOrderStatus(orderStatus);
-			customerOrderDao.addCustomerOrder(customerOrder);
+			if (customerOrder.getCustomer().getUserId() == userId || customerOrder.getMerchantId() == userId) {
+				customerOrder.setOrderStatus(orderStatus);
+				customerOrderDao.addCustomerOrder(customerOrder);
 
-			CustomerOrderResponse customerOrderResponse = this.modelMapper.map(customerOrder,
-					CustomerOrderResponse.class);
-			return responseEntity.getResponseEntity(customerOrderResponse, "customer order updated successfully",
-					HttpStatus.OK);
+				CustomerOrderResponse customerOrderResponse = this.modelMapper.map(customerOrder,
+						CustomerOrderResponse.class);
+				return responseEntity.getResponseEntity(customerOrderResponse, "customer order updated successfully",
+						HttpStatus.OK);
 
+			} else
+				throw new UnAuthorizedToAccessException("Failed to update customer order");
 		} else {
-			throw new CustomerOrderNotFoundById("failed to update customer order");
+			throw new CustomerOrderNotFoundById("Failed to update customer order");
 		}
 	}
 
