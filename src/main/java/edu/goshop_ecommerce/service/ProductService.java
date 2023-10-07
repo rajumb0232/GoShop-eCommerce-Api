@@ -71,7 +71,7 @@ public class ProductService {
 					product.setUser(user);
 					product.setDeleted(false);
 					product.setProductFinalePrice(
-							product.getProductMRP() * (100 - product.getProductdiscountInPercentage()) / 100);
+							product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
 
 					product = productDao.addProduct(product);
 					ProductResponse productResponse = this.modelMapper.map(product, ProductResponse.class);
@@ -176,7 +176,7 @@ public class ProductService {
 			product.setUser(existingProduct.getUser());
 
 			product.setProductFinalePrice(
-					product.getProductMRP() * (100 - product.getProductdiscountInPercentage()) / 100);
+					product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
 
 			ProductResponse productResponse = this.modelMapper.map(productDao.addProduct(product),
 					ProductResponse.class);

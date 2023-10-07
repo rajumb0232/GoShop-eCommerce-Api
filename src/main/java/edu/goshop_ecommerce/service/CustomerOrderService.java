@@ -67,7 +67,7 @@ public class CustomerOrderService {
 			order.setOrderedDateTime(LocalDateTime.now());
 			order.setOrderStatus(OrderStatus.YET_TO_DISPATCH);
 
-			order.setProductdiscount(product.getProductdiscountInPercentage());
+			order.setProductdiscount(product.getProductDiscount());
 			order.setProductDescription(product.getProductDescription());
 			order.setProductFinalePrice(product.getProductFinalePrice());
 			order.setProductId(product.getProductId());

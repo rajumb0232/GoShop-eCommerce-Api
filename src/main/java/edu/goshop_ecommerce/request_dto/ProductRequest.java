@@ -26,10 +26,9 @@ public class ProductRequest {
 	@Min(value = 0, message = "discount percent must be valid")
 	@Max(value = 100, message = "discount percent cannot be greater than 100")
 	@Schema(required = true)
-	private double productdiscountInPercentage;
+	private double productDiscount;
 	@Positive
 	@Schema(required = true)
 	private int productQuantity;
-	private float rating;
 
 }
