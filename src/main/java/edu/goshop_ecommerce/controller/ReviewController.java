@@ -46,6 +46,7 @@ public class ReviewController {
 							@Content(schema = @Schema(implementation = Review.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update review", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) } )
+	@PreAuthorize("hasAuthority('CUSTOMER')")
 	@PutMapping("/reviews/{reviewId}")
 	public ResponseEntity<ResponseStructure<Review>> updateReview(@PathVariable long reviewId,
 			@RequestBody ReviewRequest reviewRequest) {

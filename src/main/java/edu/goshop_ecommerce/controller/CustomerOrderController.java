@@ -48,7 +48,6 @@ public class CustomerOrderController {
 							@Content(schema = @Schema(implementation = CustomerOrderResponse.class)) }),
 					@ApiResponse(responseCode = "404", description = "customerOrder not found", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
-	@PreAuthorize("hasAuthority('CUSTOMER') OR hasAuthority('MERCHANT') OR hasAuthority(ADMINISTRATOR)")
 	@GetMapping("/customer-orders/{customerOrderId}")
 	public ResponseEntity<ResponseStructure<CustomerOrderResponse>> findCustomerOrder(
 			@RequestParam long customerOrderId) {

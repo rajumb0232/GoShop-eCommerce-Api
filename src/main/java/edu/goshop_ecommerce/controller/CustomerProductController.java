@@ -80,6 +80,7 @@ public class CustomerProductController {
 							@Content(schema = @Schema(implementation = CustomerProductResponse.class)) }),
 					@ApiResponse(responseCode = "400", description = "failed to update customerProduct", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('CUSTOMER')")
 	@PutMapping("/buy-status/{buyStatus}/customer-products/{customerProductId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
 			@RequestParam long customerProductId, @RequestParam BuyStatus buyStatus) {
