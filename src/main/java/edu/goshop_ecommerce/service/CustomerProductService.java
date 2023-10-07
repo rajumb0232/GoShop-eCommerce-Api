@@ -64,7 +64,7 @@ public class CustomerProductService {
 					customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
 				}
 				if (priority.equals(Priority.WISHLIST)) {
-					customerProduct.setBuyStatus(BuyStatus.NONE);
+					customerProduct.setBuyStatus(BuyStatus.WISH);
 				}
 				customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 				product.getCustomerProducts().add(customerProduct);
@@ -85,7 +85,7 @@ public class CustomerProductService {
 				 * be one.
 				 */
 				if (customerProduct.getBuyStatus().equals(BuyStatus.BUY_LATER)
-						|| customerProduct.getBuyStatus().equals(BuyStatus.NONE)) {
+						|| customerProduct.getBuyStatus().equals(BuyStatus.WISH)) {
 					customerProduct.setBuyStatus(BuyStatus.BUY_NOW);
 					customerProduct = customerProductDao.addCustomerProduct(customerProduct);
 				}
@@ -160,7 +160,7 @@ public class CustomerProductService {
 			CustomerProduct customerProduct = optional.get();
 			customerProduct.setBuyStatus(buyStatus);
 
-			if (buyStatus.equals(BuyStatus.NONE)) {
+			if (buyStatus.equals(BuyStatus.WISH)) {
 				customerProduct.setPriority(Priority.WISHLIST);
 			} else {
 				customerProduct.setPriority(Priority.CART);
