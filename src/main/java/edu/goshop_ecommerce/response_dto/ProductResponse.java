@@ -3,7 +3,6 @@ package edu.goshop_ecommerce.response_dto;
 import java.util.List;
 
 import edu.goshop_ecommerce.entity.Review;
-import edu.goshop_ecommerce.request_dto.BrandResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,9 +19,9 @@ public class ProductResponse {
 	private int productQuantity;
 	private float rating;
 
-	private BrandResponse brandResponse;
+	private BrandResponse brand;
 
-	private CategoryResponse categoryResponse;
+	private CategoryResponse category;
 	
 	private List<Review> reviews;
 	

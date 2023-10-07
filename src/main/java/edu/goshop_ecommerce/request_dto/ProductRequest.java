@@ -20,11 +20,11 @@ public class ProductRequest {
 	@NotBlank(message = "brand description cannot be blank")
 	@Schema(required = true)
 	private String productDescription;
-	@Positive(message = "Product MRP must be positive")
+	@Positive(message = "Product MRP must be >= 0")
 	@Schema(required = true)
 	private double productMRP;
 	@Min(value = 0, message = "discount percent must be valid")
-	@Max(value = 100, message = "discount percent cannote greater than 100")
+	@Max(value = 100, message = "discount percent cannot be greater than 100")
 	@Schema(required = true)
 	private double productdiscountInPercentage;
 	@Positive
