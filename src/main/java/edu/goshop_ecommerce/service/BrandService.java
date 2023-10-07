@@ -12,13 +12,10 @@ import org.springframework.stereotype.Service;
 import edu.goshop_ecommerce.dao.BrandDao;
 import edu.goshop_ecommerce.entity.Brand;
 import edu.goshop_ecommerce.entity.Product;
-import edu.goshop_ecommerce.entity.User;
-import edu.goshop_ecommerce.enums.UserRole;
+import edu.goshop_ecommerce.enums.BrandCategory;
 import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
-import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
-import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.request_dto.BrandRequest;
 import edu.goshop_ecommerce.response_dto.BrandResponse;
 import edu.goshop_ecommerce.util.ResponseEntityProxy;
@@ -35,30 +32,19 @@ public class BrandService {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ResponseEntityProxy responseEntity;
-	@Autowired
-	private AuthService authService;
 
-	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(BrandRequest brandRequest) {
+	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(BrandRequest brandRequest,
+			BrandCategory brandCategory) {
 		log.info("Creating brand");
-		User user = authService.getAutheticatedUser();
 
-		if (user != null) {
+		Brand brand = this.modelMapper.map(brandRequest, Brand.class);
+		brand.setVarification(Verification.UNDER_REVIEW);
+		brand.setBrandCatergory(brandCategory);
 
-			Brand brand = this.modelMapper.map(brandRequest, Brand.class);
-			if (user.getUserRole().equals(UserRole.MERCHANT)) {
-				brand.setVarification(Verification.UNDER_REVIEW);
-			} else if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
-				brand.setVarification(Verification.VERIFIED);
-			} else
-				throw new UserIsNotAMerchantException("Only merchant can add Brand");
-
-			brandDao.addBrand(brand);
-			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-			log.info("Brand successfully created");
-			return responseEntity.getResponseEntity(brandResponse, "Successfully created Brand", HttpStatus.CREATED);
-
-		} else
-			throw new UserNotFoundByIdException("User not found");
+		brandDao.addBrand(brand);
+		BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+		log.info("Brand successfully created");
+		return responseEntity.getResponseEntity(brandResponse, "Successfully created Brand", HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(long brandId, BrandRequest brandRequest) {
@@ -67,13 +53,10 @@ public class BrandService {
 		Brand brand = this.modelMapper.map(brandRequest, Brand.class);
 
 		if (optionalBrand.isPresent()) {
-
 			Brand exBrand = optionalBrand.get();
-			brand = modelMapper.map(exBrand, Brand.class);
-
-//			brand.setBrandId(exBrand.getBrandId());
-//			brand.setVarification(exBrand.getVarification());
-//			brand.setProducts(exBrand.getProducts());
+			brand.setBrandId(exBrand.getBrandId());
+			brand.setVarification(exBrand.getVarification());
+			brand.setProducts(exBrand.getProducts());
 
 			brandDao.addBrand(brand);
 
@@ -92,16 +75,13 @@ public class BrandService {
 		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
 
 		if (optionalBrand.isPresent()) {
-
 			Brand brand = optionalBrand.get();
 			List<Product> products = brand.getProducts();
 
 			if (products != null && products.size() > 0) {
-
 				throw new BrandCanNotBeDeletedException("Failed to delete Brand.");
 
 			} else {
-
 				brandDao.deleteBrandById(brandId);
 
 				BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);

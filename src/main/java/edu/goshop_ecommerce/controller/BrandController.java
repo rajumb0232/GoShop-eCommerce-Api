@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.goshop_ecommerce.enums.BrandCategory;
 import edu.goshop_ecommerce.request_dto.BrandRequest;
 import edu.goshop_ecommerce.response_dto.BrandResponse;
 import edu.goshop_ecommerce.service.BrandService;
@@ -34,9 +35,9 @@ public class BrandController {
 			@ApiResponse(responseCode = "400", description = "failed to add brand", content = {
 					@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('MERCHANT')")
-	@PostMapping("/brands")
-	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(@RequestBody BrandRequest brandRequest) {
-		return brandService.addBrand(brandRequest);
+	@PostMapping("/brand-categories/{brandCategory}/brands")
+	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(@RequestBody BrandRequest brandRequest, @PathVariable BrandCategory brandCategory) {
+		return brandService.addBrand(brandRequest, brandCategory);
 	}
 
 	@Operation(description = "**Update Brand By Id -**"
@@ -46,7 +47,7 @@ public class BrandController {
 					@ApiResponse(responseCode = "400", description = "failed to update brand", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('MERCHANT')")
-	@PutMapping("/{brandId}")
+	@PutMapping("/brands/{brandId}")
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(@PathVariable long brandId,
 			@RequestBody BrandRequest brandRequest) {
 		return brandService.updateBrand(brandId, brandRequest);
@@ -59,7 +60,7 @@ public class BrandController {
 					@ApiResponse(responseCode = "400", description = "failed to update brand", content = {
 							@Content(schema = @Schema) }) })
 	@PreAuthorize("hasAuthority('MERCHANT') OR hasAuthority('ADMINISTRATOR')")
-	@DeleteMapping("/{brandId}")
+	@DeleteMapping("/brands/{brandId}")
 	public ResponseEntity<ResponseStructure<BrandResponse>> deleteBrand(@PathVariable long brandId) {
 		return brandService.deleteBrandById(brandId);
 	}

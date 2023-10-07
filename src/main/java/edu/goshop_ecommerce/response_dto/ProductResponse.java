@@ -14,7 +14,7 @@ public class ProductResponse {
 	private String productName;
 	private String productDescription;
 	private double productMRP;
-	private double productdiscountInPercentage;
+	private double productDiscount;
 	private double productFinalePrice;
 	private int productQuantity;
 	private float rating;

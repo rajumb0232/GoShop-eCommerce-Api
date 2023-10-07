@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.service;
+package edu.goshop_ecommerce.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

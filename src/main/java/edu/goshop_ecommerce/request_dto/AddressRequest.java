@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class AddressRequest {
 	@Schema(required = true)
-	@Min(1000)
+	@Min(100)
 	@Max(9999)
 	private int flatNo;
 	@Schema(required = true)

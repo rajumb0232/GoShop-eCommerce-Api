@@ -1,6 +1,6 @@
 package edu.goshop_ecommerce.response_dto;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import edu.goshop_ecommerce.enums.BrandCategory;
 import edu.goshop_ecommerce.enums.Verification;
@@ -15,7 +15,7 @@ public class BrandResponse {
 	private String brandName;
 	private BrandCategory brandCatergory;
 	private String brandDescription;
-	private LocalDate brandEstablishment;
+	private Date brandEstablishment;
 	private Verification varification;
 
 }

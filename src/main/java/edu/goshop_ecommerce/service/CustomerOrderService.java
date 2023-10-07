@@ -25,6 +25,7 @@ import edu.goshop_ecommerce.enums.OrderStatus;
 import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UnAuthorizedToAccessException;
 import edu.goshop_ecommerce.response_dto.AddressResponse;
 import edu.goshop_ecommerce.response_dto.CustomerOrderResponse;
 import edu.goshop_ecommerce.response_dto.UserResponse;
@@ -66,7 +67,7 @@ public class CustomerOrderService {
 			order.setOrderedDateTime(LocalDateTime.now());
 			order.setOrderStatus(OrderStatus.YET_TO_DISPATCH);
 
-			order.setProductdiscount(product.getProductdiscountInPercentage());
+			order.setProductdiscount(product.getProductDiscount());
 			order.setProductDescription(product.getProductDescription());
 			order.setProductFinalePrice(product.getProductFinalePrice());
 			order.setProductId(product.getProductId());

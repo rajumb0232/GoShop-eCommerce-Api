@@ -17,6 +17,7 @@ import edu.goshop_ecommerce.entity.User;
 import edu.goshop_ecommerce.exception.ExpiredRefreshTokenException;
 import edu.goshop_ecommerce.exception.NoUserAccociatedWithRefreshTokenException;
 import edu.goshop_ecommerce.exception.RefreshTokenNotFoundException;
+import edu.goshop_ecommerce.exception.UnAuthenticatedUserException;
 import edu.goshop_ecommerce.repo.RefreshTokenRepo;
 import edu.goshop_ecommerce.repo.UserRepo;
 import edu.goshop_ecommerce.request_dto.AuthRequest;
@@ -77,7 +78,7 @@ public class AuthService {
 		RefreshToken exRefreshToken = user.getRefreshToken();
 		if (exRefreshToken != null) {
 			refreshToken.setTokenId(exRefreshToken.getTokenId());
-			refreshToken = tokenRepo.save(refreshToken);
+			tokenRepo.save(refreshToken);
 		} else {
 			user.setRefreshToken(refreshToken);
 			refreshToken = tokenRepo.save(refreshToken);
@@ -91,7 +92,7 @@ public class AuthService {
 		if (refreshToken != null) {
 			User user = userRepo.findByRefreshToken(refreshToken);
 			if (user != null) {
-				if (refreshToken.getExpiration().before(new Date())) {
+				if (refreshToken.getExpiration().after(new Date())) {
 					return generateRefreshAndAccessToken(user.getUserEmail());
 				} else
 					throw new ExpiredRefreshTokenException("Failed to refresh Access Token.");
@@ -104,7 +105,10 @@ public class AuthService {
 	public User getAutheticatedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = userRepo.findByUserEmail(authentication.getName());
-		return user;
+		if (user != null)
+			return user;
+		else
+			throw new UnAuthenticatedUserException("Failed to authenticate user");
 	}
 
 }
