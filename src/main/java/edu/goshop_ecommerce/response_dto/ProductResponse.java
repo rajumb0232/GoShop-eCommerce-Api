@@ -20,9 +20,9 @@ public class ProductResponse {
 	private int productQuantity;
 	private float rating;
 
-	private BrandResponse brandResponse;
+	private BrandResponse brand;
 
-	private CategoryResponse categoryResponse;
+	private CategoryResponse category;
 	
 	private List<Review> reviews;
 	

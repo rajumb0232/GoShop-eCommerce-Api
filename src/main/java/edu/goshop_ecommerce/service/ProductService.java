@@ -80,8 +80,8 @@ public class ProductService {
 					CategoryResponse categoryResponse = this.modelMapper.map(product.getCategory(),
 							CategoryResponse.class);
 
-					productResponse.setBrandResponse(brandResponse);
-					productResponse.setCategoryResponse(categoryResponse);
+					productResponse.setBrand(brandResponse);
+					productResponse.setCategory(categoryResponse);
 
 					return responseEntity.getResponseEntity(productResponse, "successfully created the product",
 							HttpStatus.CREATED);
