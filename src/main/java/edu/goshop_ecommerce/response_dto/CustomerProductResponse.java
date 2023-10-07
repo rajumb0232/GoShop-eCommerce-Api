@@ -13,5 +13,5 @@ public class CustomerProductResponse {
 	private BuyStatus buyStatus;
 	private int productQuantity;
 	
-	private ProductResponse productResponse;
+	private ProductResponse product;
 }

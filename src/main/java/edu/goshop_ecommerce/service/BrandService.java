@@ -20,7 +20,7 @@ import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserIsNotAMerchantException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.request_dto.BrandRequest;
-import edu.goshop_ecommerce.request_dto.BrandResponse;
+import edu.goshop_ecommerce.response_dto.BrandResponse;
 import edu.goshop_ecommerce.util.ResponseEntityProxy;
 import edu.goshop_ecommerce.util.ResponseStructure;
 import lombok.extern.slf4j.Slf4j;

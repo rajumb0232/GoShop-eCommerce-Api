@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.goshop_ecommerce.request_dto.BrandRequest;
-import edu.goshop_ecommerce.request_dto.BrandResponse;
+import edu.goshop_ecommerce.response_dto.BrandResponse;
 import edu.goshop_ecommerce.service.BrandService;
 import edu.goshop_ecommerce.util.ErrorStructure;
 import edu.goshop_ecommerce.util.ResponseStructure;

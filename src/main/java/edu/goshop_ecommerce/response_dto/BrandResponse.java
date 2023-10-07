@@ -1,4 +1,4 @@
-package edu.goshop_ecommerce.request_dto;
+package edu.goshop_ecommerce.response_dto;
 
 import java.time.LocalDate;
 
