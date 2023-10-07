@@ -39,15 +39,20 @@ public class AddressService {
 		
 		if (user.getUserRole().equals(UserRole.CUSTOMER)) {
 			user.getAddresses().add(address);
+			
 		} else {
 			List<Address> addresses = user.getAddresses();
-			for (Address exAddress : addresses) {
-				addresses.remove(exAddress);
-				address.setAddressId(exAddress.getAddressId());
+			
+			for(Address a : addresses) {
+				address.setAddressId(a.getAddressId());
+				addresses.remove(a);
 				addresses.add(address);
+				break;
 			}
+			
 			user.setAddresses(addresses);
 		}
+		address.setUser(user);
 		address = addressDao.saveAddress(address);
 		user = userDao.saveUser(user);
 		

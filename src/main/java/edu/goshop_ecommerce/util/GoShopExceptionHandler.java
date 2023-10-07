@@ -31,10 +31,11 @@ import edu.goshop_ecommerce.exception.NoUserAccociatedWithRefreshTokenException;
 import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.RefreshTokenNotFoundException;
 import edu.goshop_ecommerce.exception.ReviewNotFoundByIdException;
+import edu.goshop_ecommerce.exception.UnAuthenticatedUserException;
+import edu.goshop_ecommerce.exception.UnAuthorizedToAccessException;
 import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
-import edu.goshop_ecommerce.service.UnAuthorizedToAccessException;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
@@ -94,6 +95,15 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setMessage(ex.getMessage());
 		error.setStatus(HttpStatus.UNAUTHORIZED.value());
 		error.setRootCause("The  user is un-authorized to access this resource");
+		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(UnAuthenticatedUserException.class)
+	public ResponseEntity<ErrorStructure> handleUnAuthenticatedUserException(UnAuthenticatedUserException ex) {
+		log.error(ex.getMessage() + " : The  user is un-authenticated");
+		error.setMessage(ex.getMessage());
+		error.setStatus(HttpStatus.UNAUTHORIZED.value());
+		error.setRootCause("The  user is un-authenticated, please provide access token");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
 	}
 

@@ -1,6 +1,6 @@
 package edu.goshop_ecommerce.entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import edu.goshop_ecommerce.enums.BrandCategory;
@@ -24,7 +24,7 @@ public class Brand {
 	private String brandName;
 	private BrandCategory brandCatergory;
 	private String brandDescription;
-	private LocalDate brandEstablishment;
+	private Date brandEstablishment;
 	private Verification varification;
 	
 	@OneToMany(mappedBy = "brand")
