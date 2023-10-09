@@ -23,8 +23,10 @@ import edu.goshop_ecommerce.exception.AdministratorCannotBeAddedException;
 import edu.goshop_ecommerce.exception.AdministratorCannotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
+import edu.goshop_ecommerce.exception.BrandNotVerifiedException;
 import edu.goshop_ecommerce.exception.CategoryCanNotBeDeletedException;
 import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
+import edu.goshop_ecommerce.exception.CategoryNotVerifiedException;
 import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.ExpiredRefreshTokenException;
 import edu.goshop_ecommerce.exception.NoUserAccociatedWithRefreshTokenException;
@@ -37,40 +39,42 @@ import edu.goshop_ecommerce.exception.UserIsNotACustomerException;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UserNotPresentWithRoleException;
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RestControllerAdvice
 public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
 	private ErrorStructure error;
-	
+
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<ErrorStructure> UserNameNotFound(BadCredentialsException ex) {
-		log.error(ex.getMessage()+" : Invalid email or password. Please check your credentials!!");
+		log.error(ex.getMessage() + " : Invalid email or password. Please check your credentials!!");
 		error.setMessage("Failed to Authenticate the User!!");
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setRootCause("Invalid email or password. Please check your credentials!!");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.NOT_FOUND);
 	}
-	
+
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<ErrorStructure> handleAccessDenied(AccessDeniedException ex) {
-		log.error(ex.getMessage()+" : User is not authorized!!");
+		log.error(ex.getMessage() + " : User is not authorized!!");
 		error.setMessage("Failed to access requested resource.");
 		error.setStatus(HttpStatus.UNAUTHORIZED.value());
-		error.setRootCause(ex.getMessage()+" | Not authorized to access the requested resource.");
+		error.setRootCause(ex.getMessage() + " | Not authorized to access the requested resource.");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@ExceptionHandler(NoUserAccociatedWithRefreshTokenException.class)
-	public ResponseEntity<ErrorStructure> handleNoUserAssociatedWithRefreshtokenException(NoUserAccociatedWithRefreshTokenException ex) {
+	public ResponseEntity<ErrorStructure> handleNoUserAssociatedWithRefreshtokenException(
+			NoUserAccociatedWithRefreshTokenException ex) {
 		log.error(ex.getMessage() + " : No user found associated with the provided refresh token");
 		error.setMessage(ex.getMessage());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
 		error.setRootCause("No user found associated with the provided refresh token.");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(ExpiredRefreshTokenException.class)
 	public ResponseEntity<ErrorStructure> handleExpiredTokenExeption(ExpiredRefreshTokenException ex) {
 		log.error(ex.getMessage() + " : The provided refresh token is expired");
@@ -79,7 +83,7 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setRootCause("The provided refresh token is expired");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(RefreshTokenNotFoundException.class)
 	public ResponseEntity<ErrorStructure> handleRefreshTokenNotFoundException(RefreshTokenNotFoundException ex) {
 		log.error(ex.getMessage() + " : The provided refresh token is not found or associated with the any user");
@@ -88,7 +92,7 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setRootCause("The provided refresh token is not found or associated with the any user");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(UnAuthorizedToAccessException.class)
 	public ResponseEntity<ErrorStructure> handleUnAuthorizedToAccessException(UnAuthorizedToAccessException ex) {
 		log.error(ex.getMessage() + " : The  user is un-authorized to access this resource");
@@ -97,7 +101,7 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setRootCause("The  user is un-authorized to access this resource");
 		return new ResponseEntity<ErrorStructure>(error, HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@ExceptionHandler(UnAuthenticatedUserException.class)
 	public ResponseEntity<ErrorStructure> handleUnAuthenticatedUserException(UnAuthenticatedUserException ex) {
 		log.error(ex.getMessage() + " : The  user is un-authenticated");
@@ -118,7 +122,8 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ResponseStructure<String>> handleUserNotPresentWithRoleException(UserNotPresentWithRoleException ex) {
+	public ResponseEntity<ResponseStructure<String>> handleUserNotPresentWithRoleException(
+			UserNotPresentWithRoleException ex) {
 		ResponseStructure<String> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
 		responseStructure.setMessage(ex.getMessage());
@@ -173,6 +178,15 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler(BrandNotVerifiedException.class)
+	public ResponseEntity<ResponseStructure<String>> handleBrandNotVerifiedException(BrandNotVerifiedException ex) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("The requested brand is not verfied");
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler
 	public ResponseEntity<ResponseStructure<String>> handleCategoryCanNotBeDeletedException(
 			CategoryCanNotBeDeletedException ex) {
@@ -191,6 +205,15 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 		responseStructure.setMessage(ex.getMessage());
 		responseStructure.setData("Category with given id not found");
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(CategoryNotVerifiedException.class)
+	public ResponseEntity<ResponseStructure<String>> handleCategoryNotVerifiedException(CategoryNotVerifiedException ex) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
+		responseStructure.setMessage(ex.getMessage());
+		responseStructure.setData("The requested category is not verfied");
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler
@@ -212,7 +235,8 @@ public class GoShopExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ResponseStructure<String>> handleCustomerOrderNotFoundByIdException(CustomerOrderNotFoundById ex) {
+	public ResponseEntity<ResponseStructure<String>> handleCustomerOrderNotFoundByIdException(
+			CustomerOrderNotFoundById ex) {
 		ResponseStructure<String> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
 		responseStructure.setMessage(ex.getMessage());

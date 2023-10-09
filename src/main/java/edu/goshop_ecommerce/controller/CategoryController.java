@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.request_dto.CategoryRequest;
 import edu.goshop_ecommerce.response_dto.CategoryResponse;
 import edu.goshop_ecommerce.service.CategoryService;
@@ -67,5 +68,18 @@ public class CategoryController {
 	@DeleteMapping("/categories/{categoryId}")
 	public ResponseEntity<ResponseStructure<CategoryResponse>> deleteCategory(@PathVariable long categoryId) {
 		return categoryService.deleteCategoryById(categoryId);
+	}
+
+	@Operation(description = "**Verify Category -**"
+			+ " the API endpoint is used to update the verification status of Category", responses = {
+					@ApiResponse(responseCode = "200", description = "successfully updated the verification status of the category", content = {
+							@Content(schema = @Schema(implementation = CategoryResponse.class)) }),
+					@ApiResponse(responseCode = "404", description = "Failed to update the verification status of the category", content = {
+							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	@PutMapping("/verification/{verification}/categories/{categoryId}")
+	public ResponseEntity<ResponseStructure<CategoryResponse>> verifyCategory(@PathVariable Verification verification,
+			@PathVariable long categoryId) {
+		return categoryService.verifyCategory(verification, categoryId);
 	}
 }
