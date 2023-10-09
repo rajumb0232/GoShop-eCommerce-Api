@@ -1,7 +1,6 @@
 package edu.goshop_ecommerce.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,48 +48,52 @@ public class BrandService {
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> updateBrand(long brandId, BrandRequest brandRequest) {
 		log.info("updating brand details");
-		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
+		Brand exBrand = brandDao.getBrandById(brandId)
+				.orElseThrow(() -> new BrandNotFoundByIdException("Failed to update Brand."));
 		Brand brand = this.modelMapper.map(brandRequest, Brand.class);
 
-		if (optionalBrand.isPresent()) {
-			Brand exBrand = optionalBrand.get();
-			brand.setBrandId(exBrand.getBrandId());
-			brand.setVarification(exBrand.getVarification());
-			brand.setProducts(exBrand.getProducts());
+		brand.setBrandId(exBrand.getBrandId());
+		brand.setVarification(exBrand.getVarification());
+		brand.setProducts(exBrand.getProducts());
 
-			brandDao.addBrand(brand);
+		brandDao.addBrand(brand);
 
-			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-			log.info("successfully updated brand details");
-			return responseEntity.getResponseEntity(brandResponse, "successfully updated brand details", HttpStatus.OK);
-
-		} else {
-			throw new BrandNotFoundByIdException("Failed to update Brand.");
-		}
-
+		BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+		log.info("successfully updated brand details");
+		return responseEntity.getResponseEntity(brandResponse, "successfully updated brand details", HttpStatus.OK);
 	}
 
 	public ResponseEntity<ResponseStructure<BrandResponse>> deleteBrandById(long brandId) {
 		log.info("deleting brand data");
-		Optional<Brand> optionalBrand = brandDao.getBrandById(brandId);
+		Brand brand = brandDao.getBrandById(brandId)
+				.orElseThrow(() -> new BrandNotFoundByIdException("Failed to delete Brand."));
 
-		if (optionalBrand.isPresent()) {
-			Brand brand = optionalBrand.get();
-			List<Product> products = brand.getProducts();
+		List<Product> products = brand.getProducts();
 
-			if (products != null && products.size() > 0) {
-				throw new BrandCanNotBeDeletedException("Failed to delete Brand.");
+		if (products != null && products.size() > 0) {
+			throw new BrandCanNotBeDeletedException("Failed to delete Brand.");
 
-			} else {
-				brandDao.deleteBrandById(brandId);
-
-				BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
-				log.info("successfully deleted the brand");
-				return responseEntity.getResponseEntity(brandResponse, "successfully deleted the brand", HttpStatus.OK);
-
-			}
 		} else {
-			throw new BrandNotFoundByIdException("Failed to delete Brand.");
+			brandDao.deleteBrandById(brandId);
+
+			BrandResponse brandResponse = this.modelMapper.map(brand, BrandResponse.class);
+			log.info("successfully deleted the brand");
+			return responseEntity.getResponseEntity(brandResponse, "successfully deleted the brand", HttpStatus.OK);
 		}
+
+	}
+
+	public ResponseEntity<ResponseStructure<BrandResponse>> verifyBrand(Verification verification, long brandId) {
+		Brand brand = brandDao.getBrandById(brandId).orElseThrow(() -> new BrandNotFoundByIdException(
+				"Failed to update verification status of Brand to " + verification.toString().toLowerCase()));
+
+		brand.setVarification(verification);
+		brand = brandDao.addBrand(brand);
+		BrandResponse brandResponse = modelMapper.map(brand, BrandResponse.class);
+		log.info("successfully updated the brand verification status to " + verification.toString().toLowerCase());
+
+		return responseEntity.getResponseEntity(brandResponse,
+				"successfully updated the brand verification status to " + verification.toString().toLowerCase(),
+				HttpStatus.OK);
 	}
 }

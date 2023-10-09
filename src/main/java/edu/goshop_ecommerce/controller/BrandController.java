@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.goshop_ecommerce.enums.BrandCategory;
+import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.request_dto.BrandRequest;
 import edu.goshop_ecommerce.response_dto.BrandResponse;
 import edu.goshop_ecommerce.service.BrandService;
@@ -36,7 +37,8 @@ public class BrandController {
 					@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('MERCHANT')")
 	@PostMapping("/brand-categories/{brandCategory}/brands")
-	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(@RequestBody BrandRequest brandRequest, @PathVariable BrandCategory brandCategory) {
+	public ResponseEntity<ResponseStructure<BrandResponse>> addBrand(@RequestBody BrandRequest brandRequest,
+			@PathVariable BrandCategory brandCategory) {
 		return brandService.addBrand(brandRequest, brandCategory);
 	}
 
@@ -65,4 +67,16 @@ public class BrandController {
 		return brandService.deleteBrandById(brandId);
 	}
 
+	@Operation(description = "**Verify Brand -** "
+			+ "the API endpoint to is used to update the verification status of the Brand", responses = {
+					@ApiResponse(responseCode = "200", description = "Brand verfied successfully", content = {
+							@Content(schema = @Schema(implementation = BrandResponse.class)) }),
+					@ApiResponse(responseCode = "404", description = "Brand not found by id", content = {
+							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	@PutMapping("/verification/{verification}/brands/{brandId}")
+	public ResponseEntity<ResponseStructure<BrandResponse>> VerifyBrand(@PathVariable Verification verification,
+			@PathVariable long brandId) {
+		return brandService.verifyBrand(verification, brandId);
+	}
 }

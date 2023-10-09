@@ -82,4 +82,19 @@ public class CategoryService {
 		}
 	}
 
+	public ResponseEntity<ResponseStructure<CategoryResponse>> verifyCategory(Verification verification,
+			long categoryId) {
+		Category category = categoryDao.getCategoryById(categoryId).orElseThrow(() -> new CategoryNotFoundByIdException(
+				"Failed to update the Category verification status to " + verification.toString().toLowerCase()));
+
+		category.setVarification(verification);
+		category = categoryDao.addCategory(category);
+		CategoryResponse categoryResponse = modelMapper.map(category, CategoryResponse.class);
+
+		return responseEntity.getResponseEntity(categoryResponse,
+				"successfully updated the category verification status to " + verification.toString().toLowerCase(),
+				HttpStatus.OK);
+
+	}
+
 }

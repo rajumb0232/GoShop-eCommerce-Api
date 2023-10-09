@@ -25,6 +25,7 @@ public class CustomerOrderResponse {
 	private double productdiscount;
 	private double productFinalePrice;
 	private int productQuantity;
+	private double totalPayableAmount;
 	
 	// user entity with role merchant
 	private long merchantId;
