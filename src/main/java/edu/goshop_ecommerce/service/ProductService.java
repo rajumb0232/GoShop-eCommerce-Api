@@ -18,8 +18,11 @@ import edu.goshop_ecommerce.entity.Category;
 import edu.goshop_ecommerce.entity.CustomerProduct;
 import edu.goshop_ecommerce.entity.Product;
 import edu.goshop_ecommerce.entity.User;
+import edu.goshop_ecommerce.enums.Verification;
 import edu.goshop_ecommerce.exception.BrandNotFoundByIdException;
+import edu.goshop_ecommerce.exception.BrandNotVerifiedException;
 import edu.goshop_ecommerce.exception.CategoryNotFoundByIdException;
+import edu.goshop_ecommerce.exception.CategoryNotVerifiedException;
 import edu.goshop_ecommerce.exception.ProductNotFoundById;
 import edu.goshop_ecommerce.exception.UserNotFoundByIdException;
 import edu.goshop_ecommerce.request_dto.ProductRequest;
@@ -59,19 +62,23 @@ public class ProductService {
 		if (user != null) {
 			log.info("checking if the category is valid");
 
-			if (optionalCategory.isPresent()) {
+			Category category = optionalCategory
+					.orElseThrow(() -> new CategoryNotFoundByIdException("Failed to create product"));
 
+			if (category.getVarification().equals(Verification.VERIFIED)) {
 				log.info("category is valid");
 				log.info("checking if the brand is valid");
 
-				if (optionalBrand.isPresent()) {
+				Brand brand = optionalBrand
+						.orElseThrow(() -> new BrandNotFoundByIdException("Failed to create product"));
+
+				if (brand.getVarification().equals(Verification.VERIFIED)) {
 					log.info("brand is valid");
 					product.setBrand(optionalBrand.get());
 					product.setCategory(optionalCategory.get());
 					product.setUser(user);
 					product.setDeleted(false);
-					product.setProductFinalePrice(
-							product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
+					product.setProductFinalePrice(product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
 
 					product = productDao.addProduct(product);
 					ProductResponse productResponse = this.modelMapper.map(product, ProductResponse.class);
@@ -87,12 +94,14 @@ public class ProductService {
 							HttpStatus.CREATED);
 
 				} else {
-					throw new BrandNotFoundByIdException("brand not found for given brand id");
+					throw new BrandNotVerifiedException("Failed to create product");
 				}
 			} else {
-				throw new CategoryNotFoundByIdException("category not found for given category id");
+				throw new CategoryNotVerifiedException("Failed to create product");
 			}
-		} else {
+		} else
+
+		{
 			throw new UserNotFoundByIdException("user not found for given user id");
 		}
 
@@ -175,8 +184,7 @@ public class ProductService {
 			product.setReviews(existingProduct.getReviews());
 			product.setUser(existingProduct.getUser());
 
-			product.setProductFinalePrice(
-					product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
+			product.setProductFinalePrice(product.getProductMRP() * (100 - product.getProductDiscount()) / 100);
 
 			ProductResponse productResponse = this.modelMapper.map(productDao.addProduct(product),
 					ProductResponse.class);

@@ -26,6 +26,8 @@ import edu.goshop_ecommerce.enums.UserRole;
 import edu.goshop_ecommerce.exception.CustomerOrderNotFoundById;
 import edu.goshop_ecommerce.exception.CustomerProductNotFoundByIdException;
 import edu.goshop_ecommerce.exception.UnAuthorizedToAccessException;
+import edu.goshop_ecommerce.repo.CustomerOrderRepo;
+import edu.goshop_ecommerce.repo.CustomerProductRepo;
 import edu.goshop_ecommerce.response_dto.AddressResponse;
 import edu.goshop_ecommerce.response_dto.CustomerOrderResponse;
 import edu.goshop_ecommerce.response_dto.UserResponse;
@@ -50,14 +52,19 @@ public class CustomerOrderService {
 	private ResponseEntityProxy responseEntity;
 	@Autowired
 	private CustomerProductDao customerProductDao;
+	@Autowired
+	private CustomerOrderRepo orderRepo;
+	@Autowired
+	private CustomerProductRepo customerProductRepo;
+	
 
-	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(long userId, long addressId,
-			int productQuantity) {
+	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(long addressId) {
 		User user = authService.getAutheticatedUser();
 		Address address = addressDao.findAddress(addressId);
 		List<CustomerProduct> customerProducts = customerProductDao.findByBuyStatusByUser(user, BuyStatus.BUY_NOW);
 		List<CustomerOrderResponse> customerOrderResponses = new ArrayList<>();
 
+		List<CustomerOrder> orders = new ArrayList<>();
 		for (CustomerProduct customerProduct : customerProducts) {
 			Product product = customerProduct.getProduct();
 			CustomerOrder order = new CustomerOrder();
@@ -73,29 +80,35 @@ public class CustomerOrderService {
 			order.setProductId(product.getProductId());
 			order.setProductMRP(product.getProductMRP());
 			order.setProductName(product.getProductName());
-			order.setProductQuantity(productQuantity);
-			product.setProductQuantity(product.getProductQuantity() - productQuantity);
+			order.setProductQuantity(customerProduct.getProductQuantity());
+			order.setTotalPayableAmount(customerProduct.getProductQuantity() * product.getProductFinalePrice());
+			product.setProductQuantity(product.getProductQuantity() - customerProduct.getProductQuantity());
 			productDao.addProduct(product);
 
 			// user with role customer
 			order.setCustomer(user);
 
 			// user with role merchant
-			order.setMerchantEmail(product.getUser().getUserEmail());
-			order.setMerchantId(product.getUser().getUserId());
-			order.setMerchantFirstName(product.getUser().getUserFirstName());
-			order.setMerchatSecondName(product.getUser().getUserSecondName());
-			order = customerOrderDao.addCustomerOrder(order);
-
+			User merchant = product.getUser();
+			order.setMerchantEmail(merchant.getUserEmail());
+			order.setMerchantId(merchant.getUserId());
+			order.setMerchantFirstName(merchant.getUserFirstName());
+			order.setMerchatSecondName(merchant.getUserSecondName());
+			orders.add(order);
+			
 			user.getCustomerOrders().add(order);
 			userDao.saveUser(user);
+			
+		}
+		List<CustomerOrder> savedOrders = orderRepo.saveAll(orders);
+		customerProductRepo.deleteAll(customerProducts);
+		
+		for(CustomerOrder order : savedOrders) {
 			CustomerOrderResponse response = this.modelMapper.map(order, CustomerOrderResponse.class);
-
 			UserResponse userResponse = this.modelMapper.map(order.getCustomer(), UserResponse.class);
 			AddressResponse addressResponse = this.modelMapper.map(address, AddressResponse.class);
 			response.setAddress(addressResponse);
 			response.setCustomer(userResponse);
-
 			customerOrderResponses.add(response);
 		}
 		return responseEntity.getResponseEntity(customerOrderResponses, "Order placed", HttpStatus.CREATED);

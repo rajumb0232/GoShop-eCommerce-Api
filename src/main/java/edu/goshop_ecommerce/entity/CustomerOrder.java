@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +29,7 @@ public class CustomerOrder {
 	private double productdiscount;
 	private double productFinalePrice;
 	private int productQuantity;
+	private double totalPayableAmount;
 	
 	private long merchantId;
 	private String merchantFirstName;
@@ -37,7 +37,7 @@ public class CustomerOrder {
 	private String merchantEmail;
 
 	
-	@OneToOne
+	@ManyToOne
 	private Address address;
 	
 	@ManyToOne

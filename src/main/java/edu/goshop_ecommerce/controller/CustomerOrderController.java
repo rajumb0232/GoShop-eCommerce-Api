@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +37,10 @@ public class CustomerOrderController {
 					@ApiResponse(responseCode = "400", description = "failed to add customerOrder", content = {
 							@Content(schema = @Schema(implementation = ErrorStructure.class)) }) })
 	@PreAuthorize("hasAuthority('CUSTOMER')")
-	@PostMapping("/customer-orders")
-	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(@RequestParam long userId,
-			@RequestParam long addressId, @RequestParam int productQuantity) {
-		return service.addCustomerOrder(userId, addressId, productQuantity);
+	@PostMapping("/addresses/{addressId}/customer-orders")
+	public ResponseEntity<ResponseStructure<List<CustomerOrderResponse>>> addCustomerOrder(
+			@PathVariable long addressId) {
+		return service.addCustomerOrder(addressId);
 	}
 
 	@Operation(description = "**Find Customer Order By Id -** "

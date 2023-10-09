@@ -42,7 +42,7 @@ public class CustomerProductController {
 	@PreAuthorize("hasAuthority('CUSTOMER')")
 	@PostMapping("/priorities/{priority}/customer-products/products/{productId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> addCustomerProduct(
-			@RequestParam Priority priority, @PathVariable long productId) {
+			@PathVariable Priority priority, @PathVariable long productId) {
 		return customerproductService.addCustomerProduct(priority, productId);
 	}
 
@@ -55,7 +55,7 @@ public class CustomerProductController {
 	@PreAuthorize("hasAuthority('CUSTOMER')")
 	@DeleteMapping("/customer-products/{CustomerProductId}")
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> deleteCustomerProduct(
-			@RequestParam long CustomerProductId) {
+			@PathVariable long CustomerProductId) {
 		return customerproductService.deleteCustomerProduct(CustomerProductId);
 	}
 
