@@ -54,7 +54,7 @@ public class CustomerProductService {
 			CustomerProduct customerProduct = new CustomerProduct();
 			if (exCustomerProduct.isEmpty()) {
 				/*
-				 * if not present create CustoemrProduct
+				 * if not present create CustomerProduct
 				 */
 				customerProduct.setUser(user);
 				customerProduct.setProduct(product);
@@ -154,27 +154,23 @@ public class CustomerProductService {
 
 	public ResponseEntity<ResponseStructure<CustomerProductResponse>> updateCustomerProductBuyStatus(
 			long customerProductId, BuyStatus buyStatus) {
-		Optional<CustomerProduct> optional = customerProductDao.getCustomerProductById(customerProductId);
+		CustomerProduct customerProduct = customerProductDao.getCustomerProductById(customerProductId)
+				.orElseThrow(() -> new CustomerProductNotFoundByIdException("Failed to update CustomerProduct!!"));
 
-		if (optional.isPresent()) {
-			CustomerProduct customerProduct = optional.get();
-			customerProduct.setBuyStatus(buyStatus);
+		customerProduct.setBuyStatus(buyStatus);
 
-			if (buyStatus.equals(BuyStatus.WISH)) {
-				customerProduct.setPriority(Priority.WISHLIST);
-			} else {
-				customerProduct.setPriority(Priority.CART);
-			}
-
-			customerProduct = customerProductDao.addCustomerProduct(customerProduct);
-			CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct,
-					CustomerProductResponse.class);
-
-			return responseEntity.getResponseEntity(customerProductResponse, "CustomerProduct updated successfully",
-					HttpStatus.OK);
+		if (buyStatus.equals(BuyStatus.WISH)) {
+			customerProduct.setPriority(Priority.WISHLIST);
 		} else {
-			throw new CustomerProductNotFoundByIdException("Failed to update CustomerProduct!!");
+			customerProduct.setPriority(Priority.CART);
 		}
+
+		customerProduct = customerProductDao.addCustomerProduct(customerProduct);
+		CustomerProductResponse customerProductResponse = this.modelMapper.map(customerProduct,
+				CustomerProductResponse.class);
+
+		return responseEntity.getResponseEntity(customerProductResponse, "CustomerProduct updated successfully",
+				HttpStatus.OK);
 	}
 
 }
